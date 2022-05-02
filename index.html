@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>WebGL - Importação de Objetos</title>
+    <script type="importmap">
+        {
+            "imports": {
+              "three": "https://unpkg.com/three/build/three.module.js",
+              "three/examples/jsm/loaders/FBXLoader": "https://unpkg.com/three/examples/jsm/loaders/FBXLoader.js"
+            }
+          }
+    </script>
+    <style>
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+        }
+
+        #c {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="c"></canvas>
+</body>
+<script type="module" src="app.js"></script>
+
+</html>
