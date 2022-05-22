@@ -1,0 +1,11 @@
+Model Information:
+* title:	Creepy House
+* source:	https://sketchfab.com/3d-models/creepy-house-e8a564e43ac3438ca0cb989a438cb69d
+* author:	forthefuture (https://sketchfab.com/forthefuture)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Creepy House" (https://sketchfab.com/3d-models/creepy-house-e8a564e43ac3438ca0cb989a438cb69d) by forthefuture (https://sketchfab.com/forthefuture) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
