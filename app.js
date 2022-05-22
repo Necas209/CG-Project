@@ -1,79 +1,128 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
+
+import { Octree } from './js/math/Octree';
+import { Capsule } from './js/math/Capsule';
 
 function main() {
-	const canvas = document.querySelector('#c');
-	const renderer = new THREE.WebGLRenderer({ canvas });
-
-	const fov = 75;
-	const aspect = 2;  // the canvas default
-	const near = 0.1;
-	const far = 5;
-	const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-	camera.position.z = 2;
-
 	const scene = new THREE.Scene();
 
+	const background_loader = new THREE.CubeTextureLoader();
+	background_loader.load([
+		'textures/background/pos-x.png',
+		'textures/background/neg-x.png',
+		'textures/background/pos-y.png',
+		'textures/background/neg-y.png',
+		'textures/background/pos-z.png',
+		'textures/background/neg-z.png',
+	], (texture) => {
+		scene.background = texture;
+	});
+
+	const camera = new THREE.PerspectiveCamera(
+		75,
+		window.innerWidth / window.innerHeight,
+		0.1,
+		1000
+	);
+	camera.position.set(0, 2, 2);
+
+	const renderer = new THREE.WebGLRenderer();
+	renderer.setPixelRatio(window.devicePixelRatio);
+	renderer.setSize(window.innerWidth, window.innerHeight);
+
+	document.body.appendChild(renderer.domElement);
+
+	const menuPanel = document.getElementById('menuPanel');
+	const startButton = document.getElementById('startButton');
+	startButton.addEventListener(
+		'click',
+		function () {
+			controls.lock();
+		},
+		false
+	);
+
+	const controls = new PointerLockControls(camera, renderer.domElement);
+	controls.addEventListener('lock', () => (menuPanel.style.display = 'none'));
+	controls.addEventListener('unlock', () => (menuPanel.style.display = 'block'));
+
+	const planeGeometry = new THREE.PlaneGeometry(100, 100);
+
+	const tex_loader = new THREE.TextureLoader();
+
+	const color_map = tex_loader.load('textures/ground/Ground037_1K_Color.png');
+	color_map.wrapS = THREE.RepeatWrapping;
+	color_map.wrapT = THREE.RepeatWrapping;
+	color_map.repeat.set(10, 10);
+
+	const material = new THREE.MeshStandardMaterial({
+		map: color_map,
+	});
+
+	const plane = new THREE.Mesh(planeGeometry, material);
+	plane.rotateX(-Math.PI / 2);
+	// plane.position.set(10, 0, -5);
+	scene.add(plane);
+
+	const gltf_loader = new GLTFLoader();
+	gltf_loader.load(
+		'creepy-house-diorama/scene.gltf',
+		(object) => {
+			object.scene.traverse(function (child) {
+				if (child.isMesh) {
+					child.castShadow = true;
+					child.receiveShadow = true;
+				}
+			});
+			object.scene.rotateY(Math.PI);
+			object.scene.position.y = 0.7;
+			scene.add(object.scene);
+		}
+	);
+
 	{
-		const color = 0xFFFFFF;
-		const intensity = 1;
-		const light = new THREE.DirectionalLight(color, intensity);
-		light.position.set(-1, 2, 4);
+		const light = new THREE.AmbientLight(0xFFFFE0, 1);
 		scene.add(light);
 	}
 
-	const boxWidth = 1;
-	const boxHeight = 1;
-	const boxDepth = 1;
-	const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
-
-	function makeInstance(geometry, color, x) {
-		const material = new THREE.MeshPhongMaterial({ color });
-
-		const cube = new THREE.Mesh(geometry, material);
-		scene.add(cube);
-
-		cube.position.x = x;
-
-		return cube;
-	}
-
-	const cubes = [
-		makeInstance(geometry, 0x44aa88, 0),
-		makeInstance(geometry, 0x8844aa, -2),
-		makeInstance(geometry, 0xaa8844, 2),
-	];
-
+	renderer.physicallyCorrectLights = true;
 	renderer.render(scene, camera);
 
-	function resizeRendererToDisplaySize(renderer) {
-		const canvas = renderer.domElement;
-		const width = canvas.clientWidth;
-		const height = canvas.clientHeight;
-		const needResize = canvas.width !== width || canvas.height !== height;
-		if (needResize) {
-			renderer.setSize(width, height, false);
+	document.addEventListener('keydown', (ev) => {
+		switch (ev.key) {
+			case 'W':
+			case 'ArrowUp':
+				controls.moveForward(0.50);
+				break;
+			case 'A':
+			case 'ArrowLeft':
+				controls.moveRight(-0.50);
+				break;
+			case 'S':
+			case 'ArrowDown':
+				controls.moveForward(-0.50);
+				break;
+			case 'D':
+			case 'ArrowRight':
+				controls.moveRight(0.50);
+				break;
 		}
-		return needResize;
+	}, true);
+
+	window.addEventListener('resize', onWindowResize, false);
+	function onWindowResize() {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		render();
 	}
 
-	function render(time) {
-		time *= 0.001;  // convert time to seconds
-
-		if (resizeRendererToDisplaySize(renderer)) {
-			const canvas = renderer.domElement;
-			camera.aspect = canvas.clientWidth / canvas.clientHeight;
-			camera.updateProjectionMatrix();
-		}
-
-		cubes.forEach((cube, ndx) => {
-			const speed = 1 + ndx * .1;
-			const rot = time * speed;
-			cube.rotation.x = rot;
-			cube.rotation.y = rot;
-		});
-
+	function render() {
+		// Update render
 		renderer.render(scene, camera);
-
+		// Callback
 		requestAnimationFrame(render);
 	}
 	requestAnimationFrame(render);
