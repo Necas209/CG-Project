@@ -128,7 +128,7 @@ function main() {
 	}
 
 	function teleportPlayerIfOob() {
-		if (camera.position.y <= - 25) {
+		if (camera.position.y <= -5) {
 			playerCollider.start.set(0, 0.35, 0);
 			playerCollider.end.set(0, 1, 0);
 			playerCollider.radius = 0.35;
