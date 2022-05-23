@@ -16,12 +16,16 @@ function main() {
 		1000
 	);
 
+	// Renderer
 	const renderer = new THREE.WebGLRenderer();
 	renderer.setPixelRatio(window.devicePixelRatio);
 	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.physicallyCorrectLights = true;
+
 
 	document.body.appendChild(renderer.domElement);
 
+	// Pointer-lock controls
 	const menuPanel = document.getElementById('menuPanel');
 	const startButton = document.getElementById('startButton');
 	startButton.addEventListener(
@@ -36,6 +40,7 @@ function main() {
 	pl_controls.addEventListener('lock', () => (menuPanel.style.display = 'none'));
 	pl_controls.addEventListener('unlock', () => (menuPanel.style.display = 'block'));
 
+	// Player controls
 	const GRAVITY = 10;
 	const STEPS_PER_FRAME = 5;
 
@@ -129,31 +134,56 @@ function main() {
 
 	function teleportPlayerIfOob() {
 		if (camera.position.y <= -5) {
-			playerCollider.start.set(0, 0.35, 0);
-			playerCollider.end.set(0, 1, 0);
+			playerCollider.start.set(-5, 0.35, -1);
+			playerCollider.end.set(-5, 1, -1);
 			playerCollider.radius = 0.35;
 			camera.position.copy(playerCollider.end);
 			camera.rotation.set(0, 0, 0);
 		}
 	}
 
-	// const planeGeometry = new THREE.PlaneGeometry(100, 100);
-	// const tex_loader = new THREE.TextureLoader();
-	// const color_map = tex_loader.load('textures/ground/Ground037_1K_Color.png');
-	// color_map.wrapS = THREE.RepeatWrapping;
-	// color_map.wrapT = THREE.RepeatWrapping;
-	// color_map.repeat.set(10, 10);
-	// const material = new THREE.MeshStandardMaterial({
-	// 	map: color_map,
-	// });
-	// const ground = new THREE.Mesh(planeGeometry, material);
-	// ground.rotateX(-Math.PI / 2);
-	// scene.add(ground);
-	// worldOctree.fromGraphNode(ground);
+	// Ground
+	const planeGeometry = new THREE.PlaneGeometry(3000, 3000);
+	const tex_loader = new THREE.TextureLoader();
+	const color_map = tex_loader.load('objects/creepy-house-gltf/textures/ground2_diffuse.png');
+	color_map.wrapS = THREE.RepeatWrapping;
+	color_map.wrapT = THREE.RepeatWrapping;
+	color_map.repeat.set(10, 10);
+	const material = new THREE.MeshPhysicalMaterial({
+		map: color_map,
+		aoMap: tex_loader.load('objects/creepy-house-gltf/textures/ground2_occlusion.png'),
+		normalMap: tex_loader.load('objects/creepy-house-gltf/textures/ground2_normal.png'),
+		specularColorMap: tex_loader.load('objects/creepy-house-gltf/textures/ground2_specularGlossiness.png'),
+	});
+	const ground = new THREE.Mesh(planeGeometry, material);
+	ground.position.setY(-155);
+	ground.rotateX(-Math.PI / 2);
+	scene.add(ground);
+				
+	// Trees
+	let tree = undefined;
 	const gltf_loader = new GLTFLoader();
-	gltf_loader.load('objects/creepy_house/scene.gltf', (gltf) => {
+	gltf_loader.load('objects/pine_tree/scene.gltf', (gltf) => {
+		scene.add(gltf.scene);
+		gltf.scene.position.set(1000, -155, 1000);
+		tree = gltf.scene;
+		gltf.scene.traverse(child => {
+			if (child.isMesh) {
+				child.castShadow = true;
+				child.receiveShadow = true;
+				if (child.material.map) {
+					child.material.map.anisotropy = 4;
+				}
+			}
+		});
+	});
+	
+	// Creepy house
+	gltf_loader.load('objects/creepy-house-gltf/scene.gltf', (gltf) => {
 		gltf.scene.scale.set(0.02, 0.02, 0.02);
 		scene.add(gltf.scene);
+		gltf.scene.add(ground);
+		gltf.scene.add(tree);
 		worldOctree.fromGraphNode(gltf.scene);
 		gltf.scene.traverse(child => {
 			if (child.isMesh) {
@@ -165,12 +195,12 @@ function main() {
 			}
 		});
 	});
+		
+	// Ambient light
+	const light = new THREE.AmbientLight(0xFFFFE0, 1);
+	scene.add(light);
 
-	{
-		const light = new THREE.AmbientLight(0xFFFFE0, 1);
-		scene.add(light);
-	}
-
+	// Background - Night Sky
 	const background_loader = new THREE.CubeTextureLoader();
 	background_loader.load([
 		'textures/background/pos-x.png',
@@ -183,7 +213,6 @@ function main() {
 		scene.background = texture;
 	});
 
-	renderer.physicallyCorrectLights = true;
 	renderer.render(scene, camera);
 
 	window.addEventListener('resize', onWindowResize, false);
