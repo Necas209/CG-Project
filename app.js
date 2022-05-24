@@ -10,7 +10,7 @@ function main() {
 	const scene = new THREE.Scene();
 
 	const axesHelper = new THREE.AxesHelper(5);
-	axesHelper.position.setY(10);
+	axesHelper.position.setY(8);
 	scene.add(axesHelper);
 
 	const camera = new THREE.PerspectiveCamera(
@@ -149,16 +149,16 @@ function main() {
 	// Ground
 	const planeGeometry = new THREE.PlaneGeometry(50, 50);
 	const tex_loader = new THREE.TextureLoader();
-	const color_map = tex_loader.load('textures/ground/Ground024_1K_Color.png');
+	const color_map = tex_loader.load('textures/ground/Moss001_1K_Color.png');
 	color_map.wrapS = THREE.RepeatWrapping;
 	color_map.wrapT = THREE.RepeatWrapping;
 	color_map.repeat.set(10, 10);
 	const ground_material = new THREE.MeshStandardMaterial({
 		map: color_map,
-		aoMap: tex_loader.load('textures/ground/Ground024_1K_AmbientOcclusion.png'),
-		normalMap: tex_loader.load('textures/ground/Ground024_1K_NormalGL.png'),
-		roughnessMap: tex_loader.load('textures/ground/Ground024_1K_Roughness.png'),
-		displacementMap: tex_loader.load('textures/ground/Ground024_1K_Displacement.png')
+		aoMap: tex_loader.load('textures/ground/Moss001_1K_AmbientOcclusion.png'),
+		normalMap: tex_loader.load('textures/ground/Moss001_1K_NormalGL.png'),
+		roughnessMap: tex_loader.load('textures/ground/Moss001_1K_Roughness.png'),
+		displacementMap: tex_loader.load('textures/ground/Moss001_1K_Displacement.png')
 	});
 	const ground = new THREE.Mesh(planeGeometry, ground_material);
 	ground.rotateX(-Math.PI / 2);
@@ -166,25 +166,11 @@ function main() {
 	world_objs.add(ground);
 
 	// House
-	// const gltf_loader = new GLTFLoader();
-	// gltf_loader.load('objects/dachniy_house/scene.gltf', (gltf) => {
-	// 	gltf.scene.scale.set(0.03, 0.03, 0.03);
-	// 	gltf.scene.rotateY(Math.PI);
-	// 	gltf.scene.position.setY(0.4);
-	// 	gltf.scene.traverse(child => {
-	// 		if (child.isMesh) {
-	// 			child.castShadow = true;
-	// 			child.receiveShadow = true;
-	// 		}
-	// 	});
-	// 	world_objs.add(gltf.scene);
-	// 	worldOctree.fromGraphNode(world_objs);
-	// });
-	const gltf_loader = new GLTFLoader();
-	gltf_loader.load('objects/old_house/scene.gltf', (gltf) => {
-		gltf.scene.scale.set(0.015, 0.015, 0.015);
-		//gltf.scene.rotateY(Math.PI);
-		gltf.scene.position.set(-4, 0.4, 1);
+	const gltfLoader = new GLTFLoader();
+	gltfLoader.load('objects/dachniy_house/scene.gltf', (gltf) => {
+		gltf.scene.scale.set(0.03, 0.03, 0.03);
+		gltf.scene.rotateY(Math.PI);
+		gltf.scene.position.setY(0.4);
 		gltf.scene.traverse(child => {
 			if (child.isMesh) {
 				child.castShadow = true;
@@ -194,6 +180,20 @@ function main() {
 		world_objs.add(gltf.scene);
 		worldOctree.fromGraphNode(world_objs);
 	});
+	// const gltf_loader = new GLTFLoader();
+	// gltf_loader.load('objects/old_house/scene.gltf', (gltf) => {
+	// 	gltf.scene.scale.set(0.015, 0.015, 0.015);
+	// 	//gltf.scene.rotateY(Math.PI);
+	// 	gltf.scene.position.set(-4, 0.5, 1);
+	// 	gltf.scene.traverse(child => {
+	// 		if (child.isMesh) {
+	// 			child.castShadow = true;
+	// 			child.receiveShadow = true;
+	// 		}
+	// 	});
+	// 	world_objs.add(gltf.scene);
+	// 	worldOctree.fromGraphNode(world_objs);
+	// });
 	
 	// Picket fence
 	const shape = new THREE.Shape();
@@ -223,13 +223,13 @@ function main() {
 	const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0 });
 	const map = tex_loader.load('textures/fence/Wood033_1K_Color.png');
 	map.wrapS = map.wrapT = THREE.RepeatWrapping;
-	map.repeat.set(0.5, 0.5);
+	map.repeat.set(0.6, 0.6);
 	const normalMap = tex_loader.load('textures/fence/Wood033_1K_NormalGL.png');
 	normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping;
-	normalMap.repeat.set(0.5, 0.5);
+	normalMap.repeat.set(0.6, 0.6);
 	const displacementMap = tex_loader.load('textures/fence/Wood033_1K_Displacement.png');
 	displacementMap.wrapS = displacementMap.wrapT = THREE.RepeatWrapping;
-	displacementMap.repeat.set(0.5, 0.5);
+	displacementMap.repeat.set(0.6, 0.6);
 
 	const fence_material = new THREE.MeshPhysicalMaterial({
 		map: map,
@@ -242,17 +242,20 @@ function main() {
 
 	const fences = new THREE.Group();
 	const fence = new THREE.Mesh(geometry, fence_material);
+	// (-10, 0, -10) -> (-10, 0, 10)
 	for (let i = 0; i < 14; i++) {
 		const temp = fence.clone();
 		temp.position.set(-10 + 1.5 * i, 0, -10);
 		fences.add(temp);
 	}
+	// (-10, 0, -10) -> (-10, 0, 10)
 	for (let i = 0; i < 14; i++) {
 		const temp = fence.clone();
 		temp.rotateY(Math.PI / 2);
 		temp.position.set(-10, 0, -10 + 1.5 * i);
 		fences.add(temp);
 	}
+	// (-10, 0, 10) -> (10, 0, 10)
 	for (let i = 0; i < 14; i++) {
 		if (i != 7)
 		{
@@ -261,6 +264,7 @@ function main() {
 			fences.add(temp);
 		}
 	}
+	// (10, 0, -10) -> (10, 0, 10)
 	for (let i = 0; i < 14; i++) {
 		const temp = fence.clone();
 		temp.rotateY(Math.PI / 2);
@@ -269,17 +273,34 @@ function main() {
 	}
 	world_objs.add(fences);
 
+	// Monster
+	let animationMixer = null;
+	gltfLoader.load('objects/zombie/main/scene.glb', (gltf) => {
+		animationMixer = new THREE.AnimationMixer(gltf.scene);	
+		var action = animationMixer.clipAction(gltf.animations[0]);
+		action.play();	
+		gltf.scene.traverse(child => {
+			if (child.isMesh) {
+				child.castShadow = true;
+				child.receiveShadow = true;
+			}
+		});
+		gltf.scene.scale.set(2, 2, 2);
+		gltf.scene.position.set(-8, 0, 3);
+		world_objs.add(gltf.scene);
+	});
+
 	// Trees
 	const treePositions = [
-		[15, 0, -15], [13, 0, -9], [15, 0, -1],
-		[14.5, 0, 0], [13.5, 0, 10], [15, 0, 18],
+		[15, 0, -15], [13, 0, -9], [18, 0, -1],
+		[14.5, 0, 1], [13.5, 0, 10], [15, 0, 18],
 		[8, 0, 13.5], [-1, 0, 17], [-5, 0, 15],
 		[-13, 0, 15], [-17, 0, 6], [-15, 0, 4], 
 		[-14, 0, -1], [-11, 0, -15], [-13.5, 0, -13],
 		[-10, 0, -17], [-6, 0, -13], [0, 0, -13.5],
 		[1, 0, -15], [8, 0, -14]
 	];
-	gltf_loader.load('objects/pine_tree/scene.gltf', (gltf) => {
+	gltfLoader.load('objects/pine_tree/scene.gltf', (gltf) => {
 		gltf.scene.scale.set(0.04, 0.04, 0.04);
 		gltf.scene.traverse(child => {
 			if (child.isMesh) {
@@ -295,8 +316,9 @@ function main() {
 			trees.add(tree);
 		}
 		world_objs.add(trees);
+		worldOctree.fromGraphNode(world_objs);
 	});
-
+	
 	scene.add(world_objs);
 	worldOctree.fromGraphNode(world_objs);
 
@@ -335,6 +357,9 @@ function main() {
 			controls(deltaTime);
 			updatePlayer(deltaTime);
 			teleportPlayerIfOob();
+			if (animationMixer != null) {
+				animationMixer.update(deltaTime);
+			}
 		}
 		// Update render
 		renderer.render(scene, camera);
