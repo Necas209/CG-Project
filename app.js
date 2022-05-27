@@ -13,12 +13,34 @@ function main() {
 	axesHelper.position.setY(8);
 	scene.add(axesHelper);
 
+	// Player controls
+	const GRAVITY = 10;
+	const STEPS_PER_FRAME = 5;
+	
+	const worldOctree = new Octree();
+	
+	const playerCollider = new Capsule(new THREE.Vector3(0, 0.5, 10), new THREE.Vector3(0, 2.3, 10), 0.2);
+	
+	const playerVelocity = new THREE.Vector3();
+	const playerDirection = new THREE.Vector3();
+	
+	let playerOnFloor = false;
+		
 	const camera = new THREE.PerspectiveCamera(
 		75,
 		window.innerWidth / window.innerHeight,
 		0.1,
 		1000
 	);
+	// Add flashlight to camera
+	const spotLight = new THREE.SpotLight(0xffffff, 0);
+	spotLight.angle = Math.PI * 0.2;
+	spotLight.power = 20;
+	spotLight.decay = 2;
+	camera.add(spotLight);
+	camera.add(spotLight.target);
+	spotLight.target.position.set(0, 0, -1);
+	scene.add(camera);
 
 	// Renderer
 	const renderer = new THREE.WebGLRenderer();
@@ -44,19 +66,6 @@ function main() {
 	pl_controls.addEventListener('lock', () => (menuPanel.style.display = 'none'));
 	pl_controls.addEventListener('unlock', () => (menuPanel.style.display = 'block'));
 
-	// Player controls
-	const GRAVITY = 10;
-	const STEPS_PER_FRAME = 5;
-
-	const worldOctree = new Octree();
-
-	const playerCollider = new Capsule(new THREE.Vector3(0, 0.5, 10), new THREE.Vector3(0, 2.3, 10), 0.2);
-
-	const playerVelocity = new THREE.Vector3();
-	const playerDirection = new THREE.Vector3();
-
-	let playerOnFloor = false;
-
 	const keyStates = {};
 	document.addEventListener('keydown', (event) => {
 		keyStates[event.code] = true;
@@ -64,7 +73,13 @@ function main() {
 	document.addEventListener('keyup', (event) => {
 		keyStates[event.code] = false;
 	});
-
+	// Turn on/off flashlight
+	document.addEventListener('keypress', (event) => {
+		if (event.code === 'KeyF') {
+			spotLight.power = (spotLight.power > 0) ? 0 : 20;
+		}
+	});
+	// Turn camera
 	document.body.addEventListener('mousemove', (event) => {
 		if (document.pointerLockElement === document.body) {
 			camera.rotation.y -= event.movementX / 500;
@@ -149,18 +164,21 @@ function main() {
 	// Ground
 	const planeGeometry = new THREE.PlaneGeometry(50, 50);
 	const tex_loader = new THREE.TextureLoader();
-	const color_map = tex_loader.load('textures/ground/Moss001_1K_Color.png');
-	color_map.wrapS = THREE.RepeatWrapping;
-	color_map.wrapT = THREE.RepeatWrapping;
-	color_map.repeat.set(10, 10);
+	let colorMap = tex_loader.load('textures/ground/Moss001_1K_Color.png');
+	colorMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
+	colorMap.repeat.set(10, 10);
+	let normalMap = tex_loader.load('textures/ground/Moss001_1K_NormalGL.png');
+	normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping;
+	normalMap.repeat.set(10, 10);
 	const ground_material = new THREE.MeshStandardMaterial({
-		map: color_map,
+		map: colorMap,
 		aoMap: tex_loader.load('textures/ground/Moss001_1K_AmbientOcclusion.png'),
-		normalMap: tex_loader.load('textures/ground/Moss001_1K_NormalGL.png'),
+		normalMap: normalMap,
 		roughnessMap: tex_loader.load('textures/ground/Moss001_1K_Roughness.png'),
-		displacementMap: tex_loader.load('textures/ground/Moss001_1K_Displacement.png')
+		displacementMap: tex_loader.load('textures/ground/Moss001_1K_Displacement.png'),
 	});
 	const ground = new THREE.Mesh(planeGeometry, ground_material);
+	ground.castShadow = ground.receiveShadow = true;
 	ground.rotateX(-Math.PI / 2);
 	const world_objs = new THREE.Group();
 	world_objs.add(ground);
@@ -180,6 +198,7 @@ function main() {
 		world_objs.add(gltf.scene);
 		worldOctree.fromGraphNode(world_objs);
 	});
+	
 	// const gltf_loader = new GLTFLoader();
 	// gltf_loader.load('objects/old_house/scene.gltf', (gltf) => {
 	// 	gltf.scene.scale.set(0.015, 0.015, 0.015);
@@ -195,6 +214,21 @@ function main() {
 	// 	worldOctree.fromGraphNode(world_objs);
 	// });
 	
+	// Porch lights
+	const pLight_material = new THREE.MeshStandardMaterial({
+		map: tex_loader.load('textures/porch-lights/Metal027_1K_Color.png'),
+		displacementMap: tex_loader.load('textures/porch-lights/Metal027_1K_Displacement.png'),
+		metalnessMap: tex_loader.load('textures/porch-lights/Metal027_1K_Metalness.png'),
+		normalMap: tex_loader.load('textures/porch-lights/Metal027_1K_NormalGL.png'),
+		roughnessMap: tex_loader.load('textures/porch-lights/Metal027_1K_Roughness.png'),
+		displacementScale: 0
+	});
+	const bottom_geometry = new THREE.CylinderGeometry(0.2, 0.2, 0.05);
+	const pLight_base = new THREE.Mesh(bottom_geometry, pLight_material);
+	pLight_base.castShadow = pLight_base.receiveShadow = true;
+	scene.add(pLight_base);
+	pLight_base.position.set(-5, 1, 8);
+
 	// Picket fence
 	const shape = new THREE.Shape();
 	shape.moveTo(0, 0);
@@ -221,27 +255,28 @@ function main() {
 	shape.lineTo(0, 0);
 
 	const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0 });
-	const map = tex_loader.load('textures/fence/Wood033_1K_Color.png');
-	map.wrapS = map.wrapT = THREE.RepeatWrapping;
-	map.repeat.set(0.6, 0.6);
-	const normalMap = tex_loader.load('textures/fence/Wood033_1K_NormalGL.png');
+	colorMap = tex_loader.load('textures/fence/Wood033_1K_Color.png');
+	colorMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
+	colorMap.repeat.set(0.6, 0.6);
+	normalMap = tex_loader.load('textures/fence/Wood033_1K_NormalGL.png');
 	normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping;
 	normalMap.repeat.set(0.6, 0.6);
 	const displacementMap = tex_loader.load('textures/fence/Wood033_1K_Displacement.png');
 	displacementMap.wrapS = displacementMap.wrapT = THREE.RepeatWrapping;
 	displacementMap.repeat.set(0.6, 0.6);
 
-	const fence_material = new THREE.MeshPhysicalMaterial({
-		map: map,
+	const fence_material = new THREE.MeshStandardMaterial({
+		map: colorMap,
 		aoMap: tex_loader.load('textures/fence/Wood033_1K_AmbientOcclusion.png'),
 		normalMap: normalMap,
 		roughnessMap: tex_loader.load('textures/fence/Wood033_1K_Roughness.png'),
 		displacementMap: displacementMap,
-		displacementScale: 0,
+		displacementScale: 0
 	});
 
 	const fences = new THREE.Group();
 	const fence = new THREE.Mesh(geometry, fence_material);
+	fence.castShadow = fence.receiveShadow = true;
 	// (-10, 0, -10) -> (-10, 0, 10)
 	for (let i = 0; i < 14; i++) {
 		const temp = fence.clone();
