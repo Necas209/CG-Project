@@ -3,6 +3,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
 import { Octree } from 'three/examples/jsm/math/Octree';
 import { Capsule } from 'three/examples/jsm/math/Capsule';
+import { PorchLight } from './PorchLight';
+
 
 function main() {
 	const clock = new THREE.Clock();
@@ -16,16 +18,16 @@ function main() {
 	// Player controls
 	const GRAVITY = 10;
 	const STEPS_PER_FRAME = 5;
-	
+
 	const worldOctree = new Octree();
-	
+
 	const playerCollider = new Capsule(new THREE.Vector3(0, 0.5, 10), new THREE.Vector3(0, 2.3, 10), 0.2);
-	
+
 	const playerVelocity = new THREE.Vector3();
 	const playerDirection = new THREE.Vector3();
-	
+
 	let playerOnFloor = false;
-		
+
 	const camera = new THREE.PerspectiveCamera(
 		75,
 		window.innerWidth / window.innerHeight,
@@ -162,22 +164,22 @@ function main() {
 	}
 
 	// Ground
-	const planeGeometry = new THREE.PlaneGeometry(50, 50);
-	const tex_loader = new THREE.TextureLoader();
-	let colorMap = tex_loader.load('textures/ground/Moss001_1K_Color.png');
+	const groundGeometry = new THREE.PlaneGeometry(50, 50);
+	const textureLoader = new THREE.TextureLoader();
+	let colorMap = textureLoader.load('textures/ground/Moss001_1K_Color.png');
 	colorMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
 	colorMap.repeat.set(10, 10);
-	let normalMap = tex_loader.load('textures/ground/Moss001_1K_NormalGL.png');
+	let normalMap = textureLoader.load('textures/ground/Moss001_1K_NormalGL.png');
 	normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping;
 	normalMap.repeat.set(10, 10);
-	const ground_material = new THREE.MeshStandardMaterial({
+	const groundMaterial = new THREE.MeshStandardMaterial({
 		map: colorMap,
-		aoMap: tex_loader.load('textures/ground/Moss001_1K_AmbientOcclusion.png'),
+		aoMap: textureLoader.load('textures/ground/Moss001_1K_AmbientOcclusion.png'),
 		normalMap: normalMap,
-		roughnessMap: tex_loader.load('textures/ground/Moss001_1K_Roughness.png'),
-		displacementMap: tex_loader.load('textures/ground/Moss001_1K_Displacement.png'),
+		roughnessMap: textureLoader.load('textures/ground/Moss001_1K_Roughness.png'),
+		displacementMap: textureLoader.load('textures/ground/Moss001_1K_Displacement.png'),
 	});
-	const ground = new THREE.Mesh(planeGeometry, ground_material);
+	const ground = new THREE.Mesh(groundGeometry, groundMaterial);
 	ground.castShadow = ground.receiveShadow = true;
 	ground.rotateX(-Math.PI / 2);
 	const world_objs = new THREE.Group();
@@ -198,7 +200,7 @@ function main() {
 		world_objs.add(gltf.scene);
 		worldOctree.fromGraphNode(world_objs);
 	});
-	
+
 	// const gltf_loader = new GLTFLoader();
 	// gltf_loader.load('objects/old_house/scene.gltf', (gltf) => {
 	// 	gltf.scene.scale.set(0.015, 0.015, 0.015);
@@ -213,21 +215,10 @@ function main() {
 	// 	world_objs.add(gltf.scene);
 	// 	worldOctree.fromGraphNode(world_objs);
 	// });
-	
-	// Porch lights
-	const pLight_material = new THREE.MeshStandardMaterial({
-		map: tex_loader.load('textures/porch-lights/Metal027_1K_Color.png'),
-		displacementMap: tex_loader.load('textures/porch-lights/Metal027_1K_Displacement.png'),
-		metalnessMap: tex_loader.load('textures/porch-lights/Metal027_1K_Metalness.png'),
-		normalMap: tex_loader.load('textures/porch-lights/Metal027_1K_NormalGL.png'),
-		roughnessMap: tex_loader.load('textures/porch-lights/Metal027_1K_Roughness.png'),
-		displacementScale: 0
-	});
-	const bottom_geometry = new THREE.CylinderGeometry(0.2, 0.2, 0.05);
-	const pLight_base = new THREE.Mesh(bottom_geometry, pLight_material);
-	pLight_base.castShadow = pLight_base.receiveShadow = true;
-	scene.add(pLight_base);
-	pLight_base.position.set(-5, 1, 8);
+
+	const porchLight = new PorchLight();
+	porchLight.position.set(-3.05, 1.5, 0);
+	world_objs.add(porchLight);
 
 	// Picket fence
 	const shape = new THREE.Shape();
@@ -254,28 +245,28 @@ function main() {
 	shape.lineTo(0, 0.9);
 	shape.lineTo(0, 0);
 
-	const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0 });
-	colorMap = tex_loader.load('textures/fence/Wood033_1K_Color.png');
+	const fenceGeometry = new THREE.ExtrudeBufferGeometry(shape, { depth: 0 });
+	colorMap = textureLoader.load('textures/fence/Wood033_1K_Color.png');
 	colorMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
 	colorMap.repeat.set(0.6, 0.6);
-	normalMap = tex_loader.load('textures/fence/Wood033_1K_NormalGL.png');
+	normalMap = textureLoader.load('textures/fence/Wood033_1K_NormalGL.png');
 	normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping;
 	normalMap.repeat.set(0.6, 0.6);
-	const displacementMap = tex_loader.load('textures/fence/Wood033_1K_Displacement.png');
+	const displacementMap = textureLoader.load('textures/fence/Wood033_1K_Displacement.png');
 	displacementMap.wrapS = displacementMap.wrapT = THREE.RepeatWrapping;
 	displacementMap.repeat.set(0.6, 0.6);
 
-	const fence_material = new THREE.MeshStandardMaterial({
+	const fenceMaterial = new THREE.MeshStandardMaterial({
 		map: colorMap,
-		aoMap: tex_loader.load('textures/fence/Wood033_1K_AmbientOcclusion.png'),
+		aoMap: textureLoader.load('textures/fence/Wood033_1K_AmbientOcclusion.png'),
 		normalMap: normalMap,
-		roughnessMap: tex_loader.load('textures/fence/Wood033_1K_Roughness.png'),
+		roughnessMap: textureLoader.load('textures/fence/Wood033_1K_Roughness.png'),
 		displacementMap: displacementMap,
 		displacementScale: 0
 	});
 
 	const fences = new THREE.Group();
-	const fence = new THREE.Mesh(geometry, fence_material);
+	const fence = new THREE.Mesh(fenceGeometry, fenceMaterial);
 	fence.castShadow = fence.receiveShadow = true;
 	// (-10, 0, -10) -> (-10, 0, 10)
 	for (let i = 0; i < 14; i++) {
@@ -292,8 +283,7 @@ function main() {
 	}
 	// (-10, 0, 10) -> (10, 0, 10)
 	for (let i = 0; i < 14; i++) {
-		if (i != 7)
-		{
+		if (i != 7) {
 			const temp = fence.clone();
 			temp.position.set(-10 + 1.5 * i, 0, 10);
 			fences.add(temp);
@@ -311,9 +301,9 @@ function main() {
 	// Monster
 	let animationMixer = null;
 	gltfLoader.load('objects/zombie/main/scene.glb', (gltf) => {
-		animationMixer = new THREE.AnimationMixer(gltf.scene);	
+		animationMixer = new THREE.AnimationMixer(gltf.scene);
 		var action = animationMixer.clipAction(gltf.animations[0]);
-		action.play();	
+		action.play();
 		gltf.scene.traverse(child => {
 			if (child.isMesh) {
 				child.castShadow = true;
@@ -330,7 +320,7 @@ function main() {
 		[15, 0, -15], [13, 0, -9], [18, 0, -1],
 		[14.5, 0, 1], [13.5, 0, 10], [15, 0, 18],
 		[8, 0, 13.5], [-1, 0, 17], [-5, 0, 15],
-		[-13, 0, 15], [-17, 0, 6], [-15, 0, 4], 
+		[-13, 0, 15], [-17, 0, 6], [-15, 0, 4],
 		[-14, 0, -1], [-11, 0, -15], [-13.5, 0, -13],
 		[-10, 0, -17], [-6, 0, -13], [0, 0, -13.5],
 		[1, 0, -15], [8, 0, -14]
@@ -344,8 +334,7 @@ function main() {
 			}
 		});
 		const trees = new THREE.Group();
-		for(let i = 0; i < 20; i++)
-		{
+		for (let i = 0; i < 20; i++) {
 			const tree = gltf.scene.clone();
 			tree.position.set(treePositions[i][0], treePositions[i][1], treePositions[i][2]);
 			trees.add(tree);
@@ -353,7 +342,7 @@ function main() {
 		world_objs.add(trees);
 		worldOctree.fromGraphNode(world_objs);
 	});
-	
+
 	scene.add(world_objs);
 	worldOctree.fromGraphNode(world_objs);
 
