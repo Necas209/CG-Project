@@ -1,7 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5bec662e-3613-485d-84cd-44564efdd906" name="Changes" comment="" />
+    <list default="true" id="7ac31777-1db0-4f47-a4f0-fe04c9e4a48f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/World.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PorchLight.js" beforeDir="false" afterPath="$PROJECT_DIR$/objects.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/license.txt" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/license.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/scene.bin" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/scene.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/scene.gltf" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/scene.gltf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Shifer_baseColor.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Shifer_baseColor.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Shifer_normal.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Shifer_normal.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood2_baseColor.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood2_baseColor.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood3_Pol_baseColor.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood3_Pol_baseColor.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood3_Pol_normal.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood3_Pol_normal.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood4_Steny_vnutri_baseColor.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood4_Steny_vnutri_baseColor.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood4_Steny_vnutri_normal.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood4_Steny_vnutri_normal.jpeg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood5_Doski_porog_baseColor.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood5_Doski_porog_baseColor.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood5_Doski_porog_normal.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood5_Doski_porog_normal.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood_baseColor.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood_baseColor.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood_normal.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood_normal.jpeg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/zombie/main/scene.glb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/zombie/main/zombie.c4d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/photo1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/photo2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/photo3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/photo4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/photo5.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/prev.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/prevnalbedo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/prevnalroughness.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/prevnorm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/wire.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/wire2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/zombie/textures/zombie  ao.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/zombie/textures/zombie  roughness.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/zombie/textures/zombie albedo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/objects/zombie/textures/zombie normal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,7 +56,7 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="29c7TPlRArgW9iN7a43CrmJ0BdZ" />
+  <component name="ProjectId" id="29nyGNkCPVthHbDOwP6hDds8V40" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -21,28 +64,59 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
+    "javascript.nodejs.core.library.configured.version": "16.15.0",
+    "javascript.nodejs.core.library.typings.version": "16.11.36",
+    "last_opened_file_path": "C:/Users/diogo/Desktop/cg-project/server.js",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_interpreter_path": "node",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "C:\\Users\\diogo\\AppData\\Local\\JetBrains\\Toolbox\\apps\\WebStorm\\ch-0\\221.5591.52\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/cg-project/index.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JavaScript Debug.index.html" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="5bec662e-3613-485d-84cd-44564efdd906" name="Changes" comment="" />
-      <created>1653400531392</created>
+      <changelist id="7ac31777-1db0-4f47-a4f0-fe04c9e4a48f" name="Changes" comment="" />
+      <created>1653763048165</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1653400531392</updated>
-      <workItem from="1653400536240" duration="35000" />
+      <updated>1653763048165</updated>
+      <workItem from="1653763052564" duration="847000" />
+      <workItem from="1653763912906" duration="1626000" />
+      <workItem from="1653765567210" duration="3945000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
