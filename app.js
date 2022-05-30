@@ -158,8 +158,8 @@ function main() {
 	const light = new THREE.AmbientLight(0xFFFFE0, 1.5);
 	scene.add(light);
 	// Background - Night Sky
-	const background_loader = new THREE.CubeTextureLoader();
-	background_loader.load([
+	const backgroundLoader = new THREE.CubeTextureLoader();
+	backgroundLoader.load([
 		'textures/background/pos-x.png',
 		'textures/background/neg-x.png',
 		'textures/background/pos-y.png',
@@ -169,6 +169,7 @@ function main() {
 	], (texture) => {
 		scene.background = texture;
 	});
+
 	// render scene
 	renderer.render(scene, camera);
 	// check for window resize

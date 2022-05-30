@@ -2,48 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7ac31777-1db0-4f47-a4f0-fe04c9e4a48f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/World.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PorchLight.js" beforeDir="false" afterPath="$PROJECT_DIR$/objects.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/license.txt" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/license.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/scene.bin" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/scene.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/scene.gltf" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/scene.gltf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Shifer_baseColor.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Shifer_baseColor.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Shifer_normal.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Shifer_normal.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood2_baseColor.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood2_baseColor.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood3_Pol_baseColor.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood3_Pol_baseColor.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood3_Pol_normal.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood3_Pol_normal.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood4_Steny_vnutri_baseColor.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood4_Steny_vnutri_baseColor.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood4_Steny_vnutri_normal.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood4_Steny_vnutri_normal.jpeg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood5_Doski_porog_baseColor.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood5_Doski_porog_baseColor.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood5_Doski_porog_normal.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood5_Doski_porog_normal.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood_baseColor.png" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood_baseColor.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/dachniy_house/textures/Wood_normal.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/objects/house/textures/Wood_normal.jpeg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/zombie/main/scene.glb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/zombie/main/zombie.c4d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/photo1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/photo2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/photo3.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/photo4.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/photo5.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/prev.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/prevnalbedo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/prevnalroughness.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/prevnorm.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/wire.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/zombie/photos/wire2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/zombie/textures/zombie  ao.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/zombie/textures/zombie  roughness.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/zombie/textures/zombie albedo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/zombie/textures/zombie normal.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,25 +23,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "javascript.nodejs.core.library.configured.version": "16.15.0",
-    "javascript.nodejs.core.library.typings.version": "16.11.36",
-    "last_opened_file_path": "C:/Users/diogo/Desktop/cg-project/server.js",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_interpreter_path": "node",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "C:\\Users\\diogo\\AppData\\Local\\JetBrains\\Toolbox\\apps\\WebStorm\\ch-0\\221.5591.52\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;16.15.0&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;16.11.36&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/diogo/Desktop/cg-project/server.js&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\diogo\\AppData\\Local\\JetBrains\\Toolbox\\apps\\WebStorm\\ch-0\\221.5591.52\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/cg-project/index.html" useBuiltInWebServerPort="true">
       <method v="2" />
@@ -102,6 +63,8 @@
       <workItem from="1653763052564" duration="847000" />
       <workItem from="1653763912906" duration="1626000" />
       <workItem from="1653765567210" duration="3945000" />
+      <workItem from="1653916116506" duration="119000" />
+      <workItem from="1653916287842" duration="1917000" />
     </task>
     <servers />
   </component>
