@@ -1,58 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ac31777-1db0-4f47-a4f0-fe04c9e4a48f" name="Changes" comment="small fixes">
-      <change afterPath="$PROJECT_DIR$/js/objects.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/floor/Wood062_1K_AmbientOcclusion.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/floor/Wood062_1K_Color.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/floor/Wood062_1K_Displacement.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/floor/Wood062_1K_NormalDX.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/floor/Wood062_1K_NormalGL.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/floor/Wood062_1K_Roughness.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/porch-lights/Metal021_1K_Color.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/porch-lights/Metal021_1K_Displacement.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/porch-lights/Metal021_1K_Metalness.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/porch-lights/Metal021_1K_NormalDX.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/porch-lights/Metal021_1K_NormalGL.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/porch-lights/Metal021_1K_Roughness.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/roof/RoofingTiles001_1K_Color.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/roof/RoofingTiles001_1K_Displacement.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/roof/RoofingTiles001_1K_NormalDX.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/roof/RoofingTiles001_1K_NormalGL.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/roof/RoofingTiles001_1K_Roughness.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/wall/WoodSiding001_1K_AmbientOcclusion.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/wall/WoodSiding001_1K_Color.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/wall/WoodSiding001_1K_Displacement.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/wall/WoodSiding001_1K_Metalness.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/wall/WoodSiding001_1K_NormalDX.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/wall/WoodSiding001_1K_NormalGL.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/wall/WoodSiding001_1K_Roughness.png" afterDir="false" />
+    <list default="true" id="7ac31777-1db0-4f47-a4f0-fe04c9e4a48f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/textures/roof/RoofingTiles009_1K_AmbientOcclusion.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/textures/roof/RoofingTiles009_1K_Color.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/textures/roof/RoofingTiles009_1K_Displacement.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/textures/roof/RoofingTiles009_1K_NormalDX.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/textures/roof/RoofingTiles009_1K_NormalGL.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/textures/roof/RoofingTiles009_1K_Roughness.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/World.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/World.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/house/license.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/house/scene.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/house/scene.gltf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/house/textures/Shifer_baseColor.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/house/textures/Shifer_normal.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/house/textures/Wood2_baseColor.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/house/textures/Wood3_Pol_baseColor.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/house/textures/Wood3_Pol_normal.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/house/textures/Wood4_Steny_vnutri_baseColor.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/house/textures/Wood4_Steny_vnutri_normal.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/house/textures/Wood5_Doski_porog_baseColor.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/house/textures/Wood5_Doski_porog_normal.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/house/textures/Wood_baseColor.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/house/textures/Wood_normal.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/textures/porch-lights/Metal027_1K_Color.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/textures/porch-lights/Metal027_1K_Displacement.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/textures/porch-lights/Metal027_1K_Metalness.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/textures/porch-lights/Metal027_1K_NormalDX.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/textures/porch-lights/Metal027_1K_NormalGL.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/textures/porch-lights/Metal027_1K_Roughness.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/World.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/World.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/objects.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/objects.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/textures/roof/RoofingTiles001_1K_Color.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/textures/roof/RoofingTiles001_1K_Displacement.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/textures/roof/RoofingTiles001_1K_NormalDX.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/textures/roof/RoofingTiles001_1K_NormalGL.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/textures/roof/RoofingTiles001_1K_Roughness.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +61,7 @@
     "nodejs_interpreter_path": "node",
     "nodejs_package_manager_path": "npm",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "liveEdit",
     "ts.external.directory.path": "C:\\Users\\diogo\\AppData\\Local\\JetBrains\\Toolbox\\apps\\WebStorm\\ch-0\\221.5591.52\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
@@ -105,7 +74,7 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/cg-project/index.html" useBuiltInWebServerPort="true">
+    <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63343/cg-project/index.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
     <recent_temporary>
@@ -128,7 +97,8 @@
       <workItem from="1653916116506" duration="119000" />
       <workItem from="1653916287842" duration="2102000" />
       <workItem from="1653923524383" duration="6549000" />
-      <workItem from="1653932878940" duration="20142000" />
+      <workItem from="1653932878940" duration="20601000" />
+      <workItem from="1653989548452" duration="8179000" />
     </task>
     <task id="LOCAL-00001" summary="small fixes">
       <created>1653920216022</created>
@@ -137,7 +107,21 @@
       <option name="project" value="LOCAL" />
       <updated>1653920216022</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="House built from scratch">
+      <created>1653958991091</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1653958991091</updated>
+    </task>
+    <task id="LOCAL-00003" summary="House built from scratch">
+      <created>1653959015186</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1653959015186</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -157,6 +141,7 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="small fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="small fixes" />
+    <MESSAGE value="House built from scratch" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>

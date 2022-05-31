@@ -151,7 +151,6 @@ function main() {
 	const world = new World();
 	world.add_ground();
 	world.add_house();
-	world.add_porch_lights();
 	world.add_picket_fence();
 	world.add_trees(worldOctree);
 	//world.add_goblin(worldOctree);

@@ -1,4 +1,4 @@
-import { Ground, House, PicketFence, PorchLight } from 'objects';
+import { House, PicketFence, PorchLight } from 'objects';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import * as THREE from 'three';
 
@@ -9,31 +9,47 @@ export class World extends THREE.Group {
 	}
 
 	add_ground() {
-		const ground = new Ground();
-		super.add(ground);
+		const groundGeometry = new THREE.PlaneGeometry(50, 50);
+		const textureLoader = new THREE.TextureLoader();
+		let colorMap = textureLoader.load('textures/ground/Moss001_1K_Color.png', (texture) => {
+			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+			texture.repeat.set(10, 10);
+		});
+		let normalMap = textureLoader.load('textures/ground/Moss001_1K_NormalGL.png', (texture) => {
+			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+			texture.repeat.set(10, 10);
+		});
+		const groundMaterial = new THREE.MeshStandardMaterial({
+			map: colorMap,
+			aoMap: textureLoader.load('textures/ground/Moss001_1K_AmbientOcclusion.png'),
+			normalMap: normalMap,
+			roughnessMap: textureLoader.load('textures/ground/Moss001_1K_Roughness.png'),
+			displacementMap: textureLoader.load('textures/ground/Moss001_1K_Displacement.png'),
+		});
+		const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
+		groundMesh.castShadow = super.receiveShadow = true;
+		groundMesh.rotateX(-Math.PI / 2);
+		super.add(groundMesh);
 	}
 
 	add_house() {
 		const house = new House();
-		super.add(house);
-	}
-
-	add_porch_lights() {
 		const porchLightLeft = new PorchLight();
-		porchLightLeft.position.set(-3.05, 2, 0);
-		super.add(porchLightLeft);
+		porchLightLeft.rotateY(-Math.PI / 2);
+		porchLightLeft.position.set(-4.4, 1.8, 0);
+		house.add(porchLightLeft);
 		const porchLightRight = new PorchLight();
-		porchLightRight.position.set(3.5, 2, 0);
-		porchLightRight.rotateY(Math.PI);
-		super.add(porchLightRight);
+		porchLightRight.position.set(3.4, 1.8, 3.8);
+		porchLightRight.rotateY(-Math.PI / 2);
+		house.add(porchLightRight);
 		const porchLightFront = new PorchLight();
-		porchLightFront.position.set(2.4, 2, 3.75);
-		porchLightFront.rotateY(Math.PI / 2);
-		super.add(porchLightFront);
+		porchLightFront.position.set(3.5, 1.8, 0.4);
+		house.add(porchLightFront);
 		const porchLightBack = new PorchLight();
-		porchLightBack.rotateY(-Math.PI / 2);
-		porchLightBack.position.set(0, 2, -3.75);
-		super.add(porchLightBack);
+		porchLightBack.rotateY(Math.PI);
+		porchLightBack.position.set(0.625, 1.8, -4.4);
+		house.add(porchLightBack);
+		super.add(house);
 	}
 
 	add_picket_fence() {
