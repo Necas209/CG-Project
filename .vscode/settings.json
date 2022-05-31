@@ -5,7 +5,7 @@
     "liveServer.settings.ignoreFiles" : [
             ".vscode/**",
             "**/*.scss",
-            "**/*.sass",
+            "**/*.sass"
     ]
 
 }

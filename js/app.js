@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
 import { Octree } from 'three/examples/jsm/math/Octree';
 import { Capsule } from 'three/examples/jsm/math/Capsule';
-import {World} from './World';
+import {World} from 'World';
 
 
 function main() {
@@ -19,7 +19,7 @@ function main() {
 	// World octree - for collisions
 	const worldOctree = new Octree();
 	// Player variables
-	const playerCollider = new Capsule(new THREE.Vector3(0, 0.5, 10), new THREE.Vector3(0, 2.3, 10), 0.2);
+	const playerCollider = new Capsule(new THREE.Vector3(0, 0.8, 10), new THREE.Vector3(0, 2.5, 10), 0.2);
 	const playerVelocity = new THREE.Vector3();
 	const playerDirection = new THREE.Vector3();
 	let playerOnFloor = false;
@@ -37,15 +37,15 @@ function main() {
 	spotLight.decay = 2;
 	camera.add(spotLight);
 	camera.add(spotLight.target);
-	spotLight.target.position.set(0, 0, -1);
+	spotLight.target.position.set(0, 0.5, -0.5);
 	scene.add(camera);
 	// Renderer
 	const renderer = new THREE.WebGLRenderer();
 	renderer.setPixelRatio(window.devicePixelRatio);
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.physicallyCorrectLights = true;
-	// renderer.shadowMap.enabled = true;
-	// renderer.shadowMap.type = THREE.BasicShadowMap;
+	renderer.shadowMap.enabled = true;
+	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 	document.body.appendChild(renderer.domElement);
 	// Pointer-lock controls
 	const menuPanel = document.getElementById('menuPanel');
@@ -75,6 +75,8 @@ function main() {
 		if (document.pointerLockElement === document.body) {
 			camera.rotation.y -= event.movementX / 500;
 			camera.rotation.x -= event.movementY / 500;
+			spotLight.rotation.y -= event.movementX / 500;
+			spotLight.rotation.x -= event.movementY / 500;
 		}
 	});
 	function playerCollisions() {
@@ -148,10 +150,11 @@ function main() {
 	// World objects
 	const world = new World();
 	world.add_ground();
-	world.add_house(worldOctree);
+	world.add_house();
 	world.add_porch_lights();
 	world.add_picket_fence();
 	world.add_trees(worldOctree);
+	//world.add_goblin(worldOctree);
 	scene.add(world);
 	worldOctree.fromGraphNode(world);
 	// Ambient light
@@ -188,6 +191,7 @@ function main() {
 			updatePlayer(deltaTime);
 			teleportPlayerIfOob();
 		}
+		world.update_animations(deltaTime);
 		renderer.render(scene, camera);
 		requestAnimationFrame(render);
 	}
