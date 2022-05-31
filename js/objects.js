@@ -139,7 +139,7 @@ export class PorchLight extends THREE.Group {
 		const flameGeometry = new THREE.ConeBufferGeometry(0.02, 0.06);
 		const flameMaterial = new THREE.MeshStandardMaterial({
 			emissive: 0xfbb741,
-			emissiveIntensity: 1,
+			emissiveIntensity: 2,
 			color: 0x000000
 		});
 		candleLight.add(new THREE.Mesh(flameGeometry, flameMaterial));
@@ -173,7 +173,7 @@ class WoodMaterial extends THREE.MeshStandardMaterial {
 	}
 }
 
-class GlassMaterial extends THREE.MeshStandardMaterial {
+class GlassMaterial extends THREE.MeshPhysicalMaterial {
 	constructor() {
 		const textureLoader = new THREE.TextureLoader();
 		super({
@@ -183,8 +183,7 @@ class GlassMaterial extends THREE.MeshStandardMaterial {
 			normalMap: textureLoader.load('textures/porch-lights/Facade001_1K_NormalGL.png'),
 			roughnessMap: textureLoader.load('textures/porch-lights/Facade001_1K_Roughness.png'),
 			displacementScale: 0,
-			opacity: 0.1,
-			transparent: true,
+			transmission: 1
 		});
 	}
 }
@@ -291,6 +290,9 @@ class RightFrontWall extends THREE.Group {
 		const wallGeometry = new THREE.ExtrudeBufferGeometry(wallShape, {depth: 0.01});
 		const wallMesh = new THREE.Mesh(wallGeometry, new WoodMaterial());
 		super.add(wallMesh);
+		const door = new Door('front_door');
+		door.position.set(2, 1.15, 0);
+		super.add(door);
 		super.traverse((object) => {
 			object.castShadow = object.receiveShadow = true;
 		});
@@ -517,6 +519,33 @@ class Window extends THREE.Group {
 			);
 			super.add(glassMesh);
 		});
+	}
+}
+
+class Door extends THREE.Group {
+	constructor(name) {
+		super();
+		super.name = name;
+		const doorGeometry = new THREE.BoxBufferGeometry(1, 2.3, 0.1);
+		const textureLoader = new THREE.TextureLoader();
+		const colorMap = textureLoader.load('textures/fence/Wood033_1K_Color.png', (texture) => {
+			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+			texture.repeat.set(0.6, 0.6);
+		});
+		const normalMap = textureLoader.load('textures/fence/Wood033_1K_NormalGL.png', (texture) => {
+			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+			texture.repeat.set(0.6, 0.6);
+		});
+		const material = new THREE.MeshStandardMaterial({
+			map: colorMap,
+			aoMap: textureLoader.load('textures/fence/Wood033_1K_AmbientOcclusion.png'),
+			normalMap: normalMap,
+			roughnessMap: textureLoader.load('textures/fence/Wood033_1K_Roughness.png'),
+			displacementMap: textureLoader.load('textures/fence/Wood033_1K_Displacement.png'),
+			displacementScale: 0
+		});
+		const doorMesh = new THREE.Mesh(doorGeometry, material);
+		super.add(doorMesh);
 	}
 }
 

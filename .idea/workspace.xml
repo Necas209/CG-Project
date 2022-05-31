@@ -4,24 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ac31777-1db0-4f47-a4f0-fe04c9e4a48f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/textures/roof/RoofingTiles009_1K_AmbientOcclusion.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/roof/RoofingTiles009_1K_Color.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/roof/RoofingTiles009_1K_Displacement.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/roof/RoofingTiles009_1K_NormalDX.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/roof/RoofingTiles009_1K_NormalGL.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/textures/roof/RoofingTiles009_1K_Roughness.png" afterDir="false" />
+    <list default="true" id="7ac31777-1db0-4f47-a4f0-fe04c9e4a48f" name="Changes" comment="Roof + Windows + Porch lights">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/World.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/World.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/objects.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/objects.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/textures/roof/RoofingTiles001_1K_Color.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/textures/roof/RoofingTiles001_1K_Displacement.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/textures/roof/RoofingTiles001_1K_NormalDX.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/textures/roof/RoofingTiles001_1K_NormalGL.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/textures/roof/RoofingTiles001_1K_Roughness.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,27 +31,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "javascript.nodejs.core.library.configured.version": "16.15.0",
-    "javascript.nodejs.core.library.typings.version": "16.11.36",
-    "last_opened_file_path": "C:/Users/diogo/Desktop/cg-project/server.js",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_interpreter_path": "node",
-    "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "liveEdit",
-    "ts.external.directory.path": "C:\\Users\\diogo\\AppData\\Local\\JetBrains\\Toolbox\\apps\\WebStorm\\ch-0\\221.5591.52\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;16.15.0&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;16.11.36&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/diogo/Desktop/cg-project/server.js&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;liveEdit&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\diogo\\AppData\\Local\\JetBrains\\Toolbox\\apps\\WebStorm\\ch-0\\221.5591.52\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\diogo\Desktop\cg-project" />
@@ -98,7 +84,8 @@
       <workItem from="1653916287842" duration="2102000" />
       <workItem from="1653923524383" duration="6549000" />
       <workItem from="1653932878940" duration="20601000" />
-      <workItem from="1653989548452" duration="8179000" />
+      <workItem from="1653989548452" duration="8219000" />
+      <workItem from="1654002494131" duration="4196000" />
     </task>
     <task id="LOCAL-00001" summary="small fixes">
       <created>1653920216022</created>
@@ -121,7 +108,14 @@
       <option name="project" value="LOCAL" />
       <updated>1653959015186</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Roof + Windows + Porch lights">
+      <created>1653997784594</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1653997784594</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -142,6 +136,7 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="small fixes" />
     <MESSAGE value="House built from scratch" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="Roof + Windows + Porch lights" />
+    <option name="LAST_COMMIT_MESSAGE" value="Roof + Windows + Porch lights" />
   </component>
 </project>

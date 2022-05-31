@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
-import { Octree } from 'three/examples/jsm/math/Octree';
-import { Capsule } from 'three/examples/jsm/math/Capsule';
+import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockControls';
+import {Octree} from 'three/examples/jsm/math/Octree';
+import {Capsule} from 'three/examples/jsm/math/Capsule';
 import {World} from 'World';
 
 
@@ -75,24 +75,23 @@ function main() {
 		if (document.pointerLockElement === document.body) {
 			camera.rotation.y -= event.movementX / 500;
 			camera.rotation.x -= event.movementY / 500;
-			spotLight.rotation.y -= event.movementX / 500;
-			spotLight.rotation.x -= event.movementY / 500;
 		}
 	});
+	// Player functions
 	function playerCollisions() {
 		const result = worldOctree.capsuleIntersect(playerCollider);
 		playerOnFloor = false;
 		if (result) {
 			playerOnFloor = result.normal.y > 0;
 			if (!playerOnFloor) {
-				playerVelocity.addScaledVector(result.normal, - result.normal.dot(playerVelocity));
+				playerVelocity.addScaledVector(result.normal, -result.normal.dot(playerVelocity));
 			}
 			playerCollider.translate(result.normal.multiplyScalar(result.depth));
 		}
 
 	}
 	function updatePlayer(deltaTime) {
-		let damping = Math.exp(- 4 * deltaTime) - 1;
+		let damping = Math.exp(-4 * deltaTime) - 1;
 		if (!playerOnFloor) {
 			playerVelocity.y -= GRAVITY * deltaTime;
 			// small air resistance
@@ -119,15 +118,15 @@ function main() {
 	}
 	function controls(deltaTime) {
 		// gives a bit of air control
-		const speedDelta = deltaTime * (playerOnFloor ? 25 : 8);
+		const speedDelta = deltaTime * (playerOnFloor ? 15 : 8);
 		if (keyStates['KeyW']) {
 			playerVelocity.add(getForwardVector().multiplyScalar(speedDelta));
 		}
 		if (keyStates['KeyS']) {
-			playerVelocity.add(getForwardVector().multiplyScalar(- speedDelta));
+			playerVelocity.add(getForwardVector().multiplyScalar(-speedDelta));
 		}
 		if (keyStates['KeyA']) {
-			playerVelocity.add(getSideVector().multiplyScalar(- speedDelta));
+			playerVelocity.add(getSideVector().multiplyScalar(-speedDelta));
 		}
 		if (keyStates['KeyD']) {
 			playerVelocity.add(getSideVector().multiplyScalar(speedDelta));
@@ -149,12 +148,11 @@ function main() {
 	}
 	// World objects
 	const world = new World();
-	world.add_ground();
+	scene.add(world);
+	world.add_ground(worldOctree);
 	world.add_house();
 	world.add_picket_fence();
 	world.add_trees(worldOctree);
-	//world.add_goblin(worldOctree);
-	scene.add(world);
 	worldOctree.fromGraphNode(world);
 	// Ambient light
 	const light = new THREE.AmbientLight(0xFFFFE0, 1.5);
@@ -176,12 +174,16 @@ function main() {
 	renderer.render(scene, camera);
 	// check for window resize
 	window.addEventListener('resize', onWindowResize, false);
+
 	function onWindowResize() {
 		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		render();
 	}
+
+	// const raycaster = new THREE.Raycaster();
+	// const pointer = new THREE.Vector2();
 	// render function
 	function render() {
 		const deltaTime = Math.min(0.05, clock.getDelta()) / STEPS_PER_FRAME;
@@ -190,6 +192,11 @@ function main() {
 			updatePlayer(deltaTime);
 			teleportPlayerIfOob();
 		}
+		// // update the picking ray with the camera and pointer position
+		// raycaster.setFromCamera(pointer, camera);
+		// // calculate objects intersecting the picking ray
+		// const intersects = raycaster.intersectObjects(scene.children);
+		// Open door
 		world.update_animations(deltaTime);
 		renderer.render(scene, camera);
 		requestAnimationFrame(render);
