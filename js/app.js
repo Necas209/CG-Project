@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockControls';
-import {Octree} from 'three/examples/jsm/math/Octree';
-import {Capsule} from 'three/examples/jsm/math/Capsule';
-import {World} from 'World';
+import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
+import { Octree } from 'three/examples/jsm/math/Octree';
+import { Capsule } from 'three/examples/jsm/math/Capsule';
+import { World } from 'World';
 
 
 function main() {
@@ -44,18 +44,18 @@ function main() {
 	renderer.setPixelRatio(window.devicePixelRatio);
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.physicallyCorrectLights = true;
-	renderer.shadowMap.enabled = true;
-	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+	// renderer.shadowMap.enabled = true;
+	// renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 	document.body.appendChild(renderer.domElement);
 	// Pointer-lock controls
 	const menuPanel = document.getElementById('menuPanel');
 	const startButton = document.getElementById('startButton');
-	startButton.addEventListener('click', () => {
-		pl_controls.lock();
-	}, false);
 	const pl_controls = new PointerLockControls(camera, renderer.domElement);
 	pl_controls.addEventListener('lock', () => (menuPanel.style.display = 'none'));
 	pl_controls.addEventListener('unlock', () => (menuPanel.style.display = 'block'));
+	startButton.addEventListener('click', () => {
+		pl_controls.lock();
+	}, false);
 	// Turn on/off flashlight
 	document.addEventListener('keypress', (event) => {
 		if (event.code === 'KeyF') {
@@ -69,13 +69,6 @@ function main() {
 	});
 	document.addEventListener('keyup', (event) => {
 		keyStates[event.code] = false;
-	});
-	// Update camera with mouse move
-	document.body.addEventListener('mousemove', (event) => {
-		if (document.pointerLockElement === document.body) {
-			camera.rotation.y -= event.movementX / 500;
-			camera.rotation.x -= event.movementY / 500;
-		}
 	});
 	// Player functions
 	function playerCollisions() {
@@ -147,13 +140,11 @@ function main() {
 		}
 	}
 	// World objects
-	const world = new World();
-	scene.add(world);
-	world.add_ground(worldOctree);
-	world.add_house();
-	world.add_picket_fence();
-	world.add_trees(worldOctree);
-	worldOctree.fromGraphNode(world);
+	World.add_ground(scene);
+	World.add_house(scene);
+	World.add_picket_fence(scene);
+	// World.add_trees(scene, worldOctree);
+	scene.traverse(object => { worldOctree.fromGraphNode(object); });
 	// Ambient light
 	const light = new THREE.AmbientLight(0xFFFFE0, 1.5);
 	scene.add(light);
@@ -170,20 +161,32 @@ function main() {
 		scene.background = texture;
 	});
 
-	// render scene
-	renderer.render(scene, camera);
 	// check for window resize
 	window.addEventListener('resize', onWindowResize, false);
-
 	function onWindowResize() {
 		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		render();
 	}
-
-	// const raycaster = new THREE.Raycaster();
-	// const pointer = new THREE.Vector2();
+	const raycaster = new THREE.Raycaster();
+	const pointer = new THREE.Vector2();
+	let isOpening = false;
+	let isClosing = false;
+	let intersects = [];
+	const door = scene.children.find((obj) => obj.name == 'front_door');
+	document.addEventListener('keypress', event => {
+		if (event.code == 'KeyE') {
+			if (intersects[0].object.parent.name == 'front_door' && intersects[0].distance < 5) {
+				if (door.rotation.y >= -Math.PI / 2) {
+					isOpening = true;
+				}
+				if (door.rotation.y <= 0) {
+					isClosing = true;
+				}
+			}
+		}
+	});
 	// render function
 	function render() {
 		const deltaTime = Math.min(0.05, clock.getDelta()) / STEPS_PER_FRAME;
@@ -191,13 +194,23 @@ function main() {
 			controls(deltaTime);
 			updatePlayer(deltaTime);
 			teleportPlayerIfOob();
+			// update the picking ray with the camera and pointer position
+			raycaster.setFromCamera(pointer, camera);
+			// calculate objects intersecting the picking ray
+			intersects = raycaster.intersectObjects(scene.children, true);
+			if (door.rotation.y <= -Math.PI / 2) {
+				isOpening = false;
+			}
+			if (door.rotation.y >= 0) {
+				isClosing = false;
+			}
+			if (isOpening) {
+				door.rotation.y -= Math.PI / 6 * deltaTime;
+			}
+			if (isClosing) {
+				door.rotation.y += Math.PI / 6 * deltaTime;
+			}
 		}
-		// // update the picking ray with the camera and pointer position
-		// raycaster.setFromCamera(pointer, camera);
-		// // calculate objects intersecting the picking ray
-		// const intersects = raycaster.intersectObjects(scene.children);
-		// Open door
-		world.update_animations(deltaTime);
 		renderer.render(scene, camera);
 		requestAnimationFrame(render);
 	}

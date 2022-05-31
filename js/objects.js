@@ -41,24 +41,7 @@ export class PicketFence extends THREE.Mesh {
 		shape.lineTo(0, 0.9);
 		// Fence geometry and material
 		const fenceGeometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0});
-		const textureLoader = new THREE.TextureLoader();
-		const colorMap = textureLoader.load('textures/fence/Wood033_1K_Color.png', (texture) => {
-			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-			texture.repeat.set(0.6, 0.6);
-		});
-		const normalMap = textureLoader.load('textures/fence/Wood033_1K_NormalGL.png', (texture) => {
-			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-			texture.repeat.set(0.6, 0.6);
-		});
-		const fenceMaterial = new THREE.MeshStandardMaterial({
-			map: colorMap,
-			aoMap: textureLoader.load('textures/fence/Wood033_1K_AmbientOcclusion.png'),
-			normalMap: normalMap,
-			roughnessMap: textureLoader.load('textures/fence/Wood033_1K_Roughness.png'),
-			displacementMap: textureLoader.load('textures/fence/Wood033_1K_Displacement.png'),
-			displacementScale: 0
-		});
-		super(fenceGeometry, fenceMaterial);
+		super(fenceGeometry, new WoodMaterial());
 		super.castShadow = super.receiveShadow = true;
 	}
 }
@@ -156,6 +139,28 @@ export class PorchLight extends THREE.Group {
 class WoodMaterial extends THREE.MeshStandardMaterial {
 	constructor() {
 		const textureLoader = new THREE.TextureLoader();
+		const colorMap = textureLoader.load('textures/fence/Wood033_1K_Color.png', (texture) => {
+			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+			texture.repeat.set(0.6, 0.6);
+		});
+		const normalMap = textureLoader.load('textures/fence/Wood033_1K_NormalGL.png', (texture) => {
+			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+			texture.repeat.set(0.6, 0.6);
+		});
+		super({
+			map: colorMap,
+			aoMap: textureLoader.load('textures/fence/Wood033_1K_AmbientOcclusion.png'),
+			normalMap: normalMap,
+			roughnessMap: textureLoader.load('textures/fence/Wood033_1K_Roughness.png'),
+			displacementMap: textureLoader.load('textures/fence/Wood033_1K_Displacement.png'),
+			displacementScale: 0
+		});
+	}
+}
+
+class WallMaterial extends THREE.MeshStandardMaterial {
+	constructor() {
+		const textureLoader = new THREE.TextureLoader();
 		const map = textureLoader.load('textures/wall/WoodSiding001_1K_Color.png', (texture) => {
 			texture.wrapT = texture.wrapS = THREE.RepeatWrapping;
 		});
@@ -188,9 +193,76 @@ class GlassMaterial extends THREE.MeshPhysicalMaterial {
 	}
 }
 
-class LeftWall extends THREE.Group {
-	constructor() {
-		super();
+export class House {
+	static add_floor(scene) {
+		const textureLoader = new THREE.TextureLoader();
+		const map = textureLoader.load('textures/floor/Wood062_1K_Color.png', (texture) => {
+			texture.wrapT = texture.wrapS = THREE.RepeatWrapping;
+		});
+		const normalMap = textureLoader.load('textures/floor/Wood062_1K_NormalGL.png', (texture) => {
+			texture.wrapT = texture.wrapS = THREE.RepeatWrapping;
+		});
+		const material = new THREE.MeshStandardMaterial({
+			map: map,
+			aoMap: textureLoader.load('textures/floor/Wood062_1K_AmbientOcclusion.png'),
+			displacementMap: textureLoader.load('textures/floor/Wood062_1K_Displacement.png'),
+			normalMap: normalMap,
+			roughnessMap: textureLoader.load('textures/floor/Wood062_1K_Roughness.png'),
+			displacementScale: 0
+		});
+		const shape = new THREE.Shape();
+		shape.lineTo(5, 0);
+		shape.lineTo(5, 4);
+		shape.lineTo(8, 4);
+		shape.lineTo(8, 8);
+		shape.lineTo(0, 8);
+		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.0001});
+		const floor = new THREE.Mesh(geometry, material);
+		floor.castShadow = floor.receiveShadow = true;
+		floor.rotateX(-Math.PI / 2);
+		floor.position.set(-4, 0.3, 4);
+		scene.add(floor);
+	}
+
+	static add_ceiling(scene) {
+		const shape = new THREE.Shape();
+		shape.lineTo(8, 0);
+		shape.lineTo(8, 8);
+		shape.lineTo(0, 8);
+		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.0001});
+		const ceiling = new THREE.Mesh(geometry, new WallMaterial());
+		ceiling.castShadow = ceiling.receiveShadow = true;
+		ceiling.rotateX(-Math.PI / 2);
+		ceiling.position.set(-4, 3.7, 4);
+		scene.add(ceiling);
+	}
+
+	static add_roof(scene) {
+		const textureLoader = new THREE.TextureLoader();
+		const map = textureLoader.load('textures/roof/RoofingTiles009_1K_Color.png', (texture) => {
+			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+			texture.repeat.set(8, 5);
+		});
+		const normalMap = textureLoader.load('textures/roof/RoofingTiles009_1K_NormalGL.png', (texture) => {
+			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+			texture.repeat.set(8, 5);
+		});
+		const material = new THREE.MeshStandardMaterial({
+			map: map,
+			displacementMap: textureLoader.load('textures/roof/RoofingTiles009_1K_Displacement.png'),
+			normalMap: normalMap,
+			roughnessMap: textureLoader.load('textures/roof/RoofingTiles009_1K_Roughness.png'),
+			displacementScale: 0
+		});
+		const geometry = new THREE.ConeBufferGeometry(4 * Math.sqrt(2), 3, 4);
+		const roof = new THREE.Mesh(geometry, material);
+		roof.castShadow = roof.receiveShadow = true;
+		roof.rotateY(Math.PI / 4);
+		roof.position.setY(5.4);
+		scene.add(roof);
+	}
+
+	static add_left_wall(scene) {
 		const wallShape = new THREE.Shape();
 		wallShape.lineTo(8, 0);
 		wallShape.lineTo(8, 3);
@@ -208,296 +280,216 @@ class LeftWall extends THREE.Group {
 		rightWindowPath.lineTo(5.5, 2);
 		wallShape.holes.push(rightWindowPath);
 		const wallGeometry = new THREE.ExtrudeBufferGeometry(wallShape, {depth: 0.01});
-		const wallMesh = new THREE.Mesh(wallGeometry, new WoodMaterial());
-		super.add(wallMesh);
+		const wallMesh = new THREE.Mesh(wallGeometry, new WallMaterial());
+		wallMesh.castShadow = wallMesh.receiveShadow = true;
+		wallMesh.rotateY(Math.PI / 2);
+		wallMesh.position.set(-4, 0.5, 4);
+		scene.add(wallMesh);
 		const leftWindow = new Window();
-		leftWindow.position.set(1.75, 1.5, 0);
-		super.add(leftWindow);
+		leftWindow.castShadow = leftWindow.receiveShadow = true;
+		leftWindow.rotateY(Math.PI / 2);
+		leftWindow.position.set(-4, 2, -2.25);
+		scene.add(leftWindow);
 		const rightWindow = new Window();
-		rightWindow.position.set(6.25, 1.5, 0);
-		super.add(rightWindow);
-		super.rotateY(Math.PI / 2);
-		super.traverse((object) => {
-			object.castShadow = object.receiveShadow = true;
-		});
+		rightWindow.castShadow = rightWindow.receiveShadow = true;
+		rightWindow.position.set(-4, 2, 2.25);
+		rightWindow.rotateY(Math.PI / 2);
+		scene.add(rightWindow);
 	}
-}
 
-class RightWall extends THREE.Group {
-	constructor() {
-		super();
-		const wallShape = new THREE.Shape();
-		wallShape.lineTo(4, 0);
-		wallShape.lineTo(4, 3);
-		wallShape.lineTo(0, 3);
+	static add_right_wall(scene) {
+		const shape = new THREE.Shape();
+		shape.lineTo(4, 0);
+		shape.lineTo(4, 3);
+		shape.lineTo(0, 3);
 		const windowPath = new THREE.Path();
 		windowPath.moveTo(1.5, 1);
 		windowPath.lineTo(3, 1);
 		windowPath.lineTo(3, 2);
 		windowPath.lineTo(1.5, 2);
-		wallShape.holes.push(windowPath);
-		const wallGeometry = new THREE.ExtrudeBufferGeometry(wallShape, {depth: 0.01});
-		const wallMesh = new THREE.Mesh(wallGeometry, new WoodMaterial());
-		super.add(wallMesh);
+		shape.holes.push(windowPath);
+		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.01});
+		const wall = new THREE.Mesh(geometry, new WallMaterial());
+		wall.castShadow = wall.receiveShadow = true;
+		wall.rotateY(Math.PI / 2);
+		wall.position.set(4, 0.5, 0);
+		scene.add(wall);
 		const window = new Window();
-		window.position.set(2.25, 1.5, 0);
-		super.add(window);
-		super.rotateY(Math.PI / 2);
-		super.traverse((object) => {
-			object.castShadow = object.receiveShadow = true;
-		});
+		window.castShadow = window.receiveShadow = true;
+		window.rotateY(Math.PI / 2);
+		window.position.set(4, 2, -2.25);
+		scene.add(window);
 	}
-}
 
-class DoorStep extends THREE.Mesh {
-	constructor() {
-		const doorStepShape = new THREE.Shape();
-		doorStepShape.lineTo(0.8, 0);
-		doorStepShape.lineTo(0, 0.04);
-		const doorStepGeometry = new THREE.ExtrudeBufferGeometry(doorStepShape, {depth: 0.5});
-		super(doorStepGeometry, new WoodMaterial());
-		super.rotateY(-Math.PI / 2);
-	}
-}
-
-class RightLeftWall extends THREE.Mesh {
-	constructor() {
-		const wallShape = new THREE.Shape();
-		wallShape.moveTo(0, 0);
-		wallShape.lineTo(4, 0);
-		wallShape.lineTo(4, 3);
-		wallShape.lineTo(0, 3);
-		wallShape.moveTo(0, 0);
-		const wallGeometry = new THREE.ExtrudeBufferGeometry(wallShape, {depth: 0.01});
-		super(wallGeometry, new WoodMaterial());
-		super.rotateY(Math.PI / 2);
-	}
-}
-
-class RightFrontWall extends THREE.Group {
-	constructor() {
-		super();
-		const wallShape = new THREE.Shape();
-		wallShape.lineTo(3, 0);
-		wallShape.lineTo(3, 3);
-		wallShape.lineTo(0, 3);
+	static add_right_front_wall(scene) {
+		const shape = new THREE.Shape();
+		shape.lineTo(3, 0);
+		shape.lineTo(3, 3);
+		shape.lineTo(0, 3);
 		const doorPath = new THREE.Path();
 		doorPath.moveTo(1, 0);
 		doorPath.lineTo(2, 0);
 		doorPath.lineTo(2, 2.3);
 		doorPath.lineTo(1, 2.3);
-		wallShape.holes.push(doorPath);
-		const wallGeometry = new THREE.ExtrudeBufferGeometry(wallShape, {depth: 0.01});
-		const wallMesh = new THREE.Mesh(wallGeometry, new WoodMaterial());
-		super.add(wallMesh);
+		shape.holes.push(doorPath);
+		const wallGeometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.01});
+		const wall = new THREE.Mesh(wallGeometry, new WallMaterial());
+		wall.castShadow = wall.receiveShadow = true;
+		wall.position.set(1, 0.5, 0);
+		scene.add(wall);
 		const door = new Door('front_door');
-		door.position.set(2, 1.15, 0);
-		super.add(door);
-		super.traverse((object) => {
-			object.castShadow = object.receiveShadow = true;
-		});
+		door.castShadow = door.receiveShadow = true;
+		door.position.set(2.5, 1.65, 0);
+		scene.add(door);
 	}
-}
 
-class BackWall extends THREE.Group {
-	constructor() {
-		super();
+	static add_right_left_wall(scene) {
 		const wallShape = new THREE.Shape();
 		wallShape.moveTo(0, 0);
-		wallShape.lineTo(8, 0);
-		wallShape.lineTo(8, 3);
+		wallShape.lineTo(4, 0);
+		wallShape.lineTo(4, 3);
 		wallShape.lineTo(0, 3);
-		wallShape.lineTo(0, 0);
+		wallShape.moveTo(0, 0);
+		const wallGeometry = new THREE.ExtrudeBufferGeometry(wallShape, {depth: 0.01});
+		const wall = new THREE.Mesh(wallGeometry, new WallMaterial());
+		wall.castShadow = wall.receiveShadow = true;
+		wall.rotateY(Math.PI / 2);
+		wall.position.set(1, 0.5, 4);
+		scene.add(wall);
+	}
+
+	static add_front_wall(scene) {
+		const shape = new THREE.Shape();
+		shape.lineTo(5, 0);
+		shape.lineTo(5, 3);
+		shape.lineTo(0, 3);
+		const path = new THREE.Path();
+		path.moveTo(1.75, 1);
+		path.lineTo(3.25, 1);
+		path.lineTo(3.25, 2);
+		path.lineTo(1.75, 2);
+		shape.holes.push(path);
+		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.01});
+		const wallMesh = new THREE.Mesh(geometry, new WallMaterial());
+		wallMesh.castShadow = wallMesh.receiveShadow = true;
+		wallMesh.position.set(-4, 0.5, 4);
+		scene.add(wallMesh);
+		const window = new Window();
+		window.castShadow = window.receiveShadow = true;
+		window.position.set(-1.5, 2, 4);
+		scene.add(window);
+		const doorStepShape = new THREE.Shape();
+		doorStepShape.lineTo(0.8, 0);
+		doorStepShape.lineTo(0, 0.04);
+		const doorStepGeometry = new THREE.ExtrudeBufferGeometry(doorStepShape, {depth: 0.5});
+		const doorstep = new THREE.Mesh(doorStepGeometry, new WallMaterial());
+		doorstep.castShadow = doorstep.receiveShadow = true;
+		doorstep.rotateY(-Math.PI / 2);
+		doorstep.position.set(2.75, 0.4, 0.2);
+		scene.add(doorstep);
+	}
+
+	static add_back_wall(scene) {
+		const shape = new THREE.Shape();
+		shape.moveTo(0, 0);
+		shape.lineTo(8, 0);
+		shape.lineTo(8, 3);
+		shape.lineTo(0, 3);
+		shape.lineTo(0, 0);
 		const leftWindowPath = new THREE.Path();
 		leftWindowPath.moveTo(1.75, 1);
 		leftWindowPath.lineTo(3.25, 1);
 		leftWindowPath.lineTo(3.25, 2);
 		leftWindowPath.lineTo(1.75, 2);
-		wallShape.holes.push(leftWindowPath);
+		shape.holes.push(leftWindowPath);
 		const rightWindowPath = new THREE.Path();
 		rightWindowPath.moveTo(6, 1);
 		rightWindowPath.lineTo(7, 1);
 		rightWindowPath.lineTo(7, 2);
 		rightWindowPath.lineTo(6, 2);
-		wallShape.holes.push(rightWindowPath);
-		const wallGeometry = new THREE.ExtrudeBufferGeometry(wallShape, {depth: 0.01});
-		const wallMesh = new THREE.Mesh(wallGeometry, new WoodMaterial());
-		super.add(wallMesh);
+		shape.holes.push(rightWindowPath);
+		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.01});
+		const wall = new THREE.Mesh(geometry, new WallMaterial());
+		wall.castShadow = wall.receiveShadow = true;
+		wall.position.set(-4, 0.5, -4);
+		scene.add(wall);
 		const leftWindow = new Window();
-		leftWindow.position.set(2.5, 1.5, 0);
-		super.add(leftWindow);
+		leftWindow.castShadow = leftWindow.receiveShadow = true;
+		leftWindow.position.set(-1.5, 2, -4);
+		scene.add(leftWindow);
 		const rightWindow = new Window(1, 1);
-		rightWindow.position.set(6.5, 1.5, 0);
-		super.add(rightWindow);
-		super.traverse(object => {
-			object.castShadow = object.receiveShadow = true;
-		});
+		rightWindow.castShadow = rightWindow.receiveShadow = true;
+		rightWindow.position.set(2.5, 2, -4);
+		scene.add(rightWindow);
 	}
-}
 
-class FrontWall extends THREE.Group {
-	constructor() {
-		super();
-		const frontWallShape = new THREE.Shape();
-		frontWallShape.lineTo(5, 0);
-		frontWallShape.lineTo(5, 3);
-		frontWallShape.lineTo(0, 3);
-		const windowPath = new THREE.Path();
-		windowPath.moveTo(1.75, 1);
-		windowPath.lineTo(3.25, 1);
-		windowPath.lineTo(3.25, 2);
-		windowPath.lineTo(1.75, 2);
-		frontWallShape.holes.push(windowPath);
-		const frontWallGeometry = new THREE.ExtrudeBufferGeometry(frontWallShape, {depth: 0.01});
-		const frontWallMesh = new THREE.Mesh(frontWallGeometry, new WoodMaterial());
-		super.add(frontWallMesh);
-		const window = new Window();
-		window.position.set(2.5, 1.5, 0);
-		super.add(window);
-		super.traverse((object) => {
-			object.castShadow = object.receiveShadow = true;
-		});
+	static add_inner_left_wall(scene) {
+		const shape = new THREE.Shape();
+		shape.lineTo(5, 0);
+		shape.lineTo(5, 3);
+		shape.lineTo(0, 3);
+		const path = new THREE.Path();
+		path.moveTo(3, 0);
+		path.lineTo(4, 0);
+		path.lineTo(4, 2.3);
+		path.lineTo(3, 2.3);
+		shape.holes.push(path);
+		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.01});
+		const wall = new THREE.Mesh(geometry, new WallMaterial());
+		wall.castShadow = wall.receiveShadow = true;
+		wall.position.set(-4, 0.5, 0);
+		scene.add(wall);
 	}
-}
 
-class InnerLeftWall extends THREE.Group {
-	constructor() {
-		super();
-		const wallShape = new THREE.Shape();
-		wallShape.lineTo(5, 0);
-		wallShape.lineTo(5, 3);
-		wallShape.lineTo(0, 3);
-		const doorPath = new THREE.Path();
-		doorPath.moveTo(3, 0);
-		doorPath.lineTo(4, 0);
-		doorPath.lineTo(4, 2.3);
-		doorPath.lineTo(3, 2.3);
-		wallShape.holes.push(doorPath);
-		const wallGeometry = new THREE.ExtrudeBufferGeometry(wallShape, {depth: 0.01});
-		const wallMesh = new THREE.Mesh(wallGeometry, new WoodMaterial());
-		super.add(wallMesh);
-		super.traverse((object) => {
-			object.castShadow = object.receiveShadow = true;
-		});
+	static add_inner_right_wall(scene) {
+		const shape = new THREE.Shape();
+		shape.lineTo(4, 0);
+		shape.lineTo(4, 3);
+		shape.lineTo(0, 3);
+		const path = new THREE.Path();
+		path.moveTo(1.5, 0);
+		path.lineTo(2.5, 0);
+		path.lineTo(2.5, 2.3);
+		path.lineTo(1.5, 2.3);
+		shape.holes.push(path);
+		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.01});
+		const wall = new THREE.Mesh(geometry, new WallMaterial());
+		wall.castShadow = wall.receiveShadow = true;
+		wall.rotateY(Math.PI / 2);
+		wall.position.set(1, 0.5, 0);
+		scene.add(wall);
 	}
-}
 
-class InnerRightWall extends THREE.Group {
-	constructor() {
-		super();
-		const wallShape = new THREE.Shape();
-		wallShape.lineTo(4, 0);
-		wallShape.lineTo(4, 3);
-		wallShape.lineTo(0, 3);
-		const doorPath = new THREE.Path();
-		doorPath.moveTo(1.5, 0);
-		doorPath.lineTo(2.5, 0);
-		doorPath.lineTo(2.5, 2.3);
-		doorPath.lineTo(1.5, 2.3);
-		wallShape.holes.push(doorPath);
-		const wallGeometry = new THREE.ExtrudeBufferGeometry(wallShape, {depth: 0.01});
-		const wallMesh = new THREE.Mesh(wallGeometry, new WoodMaterial());
-		super.add(wallMesh);
-		super.rotateY(Math.PI / 2);
-		super.traverse((object) => {
-			object.castShadow = object.receiveShadow = true;
-		});
-	}
-}
-
-class Pillar extends THREE.Mesh {
-	constructor() {
-		const pillarShape = new THREE.Shape();
-		pillarShape.lineTo(0.4, 0);
-		pillarShape.lineTo(0.4, 3);
-		pillarShape.lineTo(0, 3);
-		const pillarGeometry = new THREE.ExtrudeBufferGeometry(pillarShape, {depth: 0.01});
-		super(pillarGeometry, new WoodMaterial());
-		super.rotateY(Math.PI / 2);
-	}
-}
-
-class Floor extends THREE.Mesh {
-	constructor() {
-		const textureLoader = new THREE.TextureLoader();
-		const map = textureLoader.load('textures/floor/Wood062_1K_Color.png', (texture) => {
-			texture.wrapT = texture.wrapS = THREE.RepeatWrapping;
-		});
-		const normalMap = textureLoader.load('textures/floor/Wood062_1K_NormalGL.png', (texture) => {
-			texture.wrapT = texture.wrapS = THREE.RepeatWrapping;
-		});
-		const floorMaterial = new THREE.MeshStandardMaterial({
-			map: map,
-			aoMap: textureLoader.load('textures/floor/Wood062_1K_AmbientOcclusion.png'),
-			displacementMap: textureLoader.load('textures/floor/Wood062_1K_Displacement.png'),
-			normalMap: normalMap,
-			roughnessMap: textureLoader.load('textures/floor/Wood062_1K_Roughness.png'),
-			displacementScale: 0
-		});
-		const floorShape = new THREE.Shape();
-		floorShape.lineTo(5, 0);
-		floorShape.lineTo(5, 4);
-		floorShape.lineTo(8, 4);
-		floorShape.lineTo(8, 8);
-		floorShape.lineTo(0, 8);
-		const floorGeometry = new THREE.ExtrudeBufferGeometry(floorShape, {depth: 0.0001});
-		super(floorGeometry, floorMaterial);
-		super.rotateX(-Math.PI / 2);
-	}
-}
-
-class Ceiling extends THREE.Mesh {
-	constructor() {
-		const ceilingShape = new THREE.Shape();
-		ceilingShape.lineTo(8, 0);
-		ceilingShape.lineTo(8, 8);
-		ceilingShape.lineTo(0, 8);
-		const floorGeometry = new THREE.ExtrudeBufferGeometry(ceilingShape, {depth: 0.0001});
-		super(floorGeometry, new WoodMaterial());
-		super.rotateX(-Math.PI / 2);
-	}
-}
-
-class Roof extends THREE.Mesh {
-	constructor() {
-		const textureLoader = new THREE.TextureLoader();
-		const map = textureLoader.load('textures/roof/RoofingTiles009_1K_Color.png', (texture) => {
-			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-			texture.repeat.set(8, 5);
-		});
-		const normalMap = textureLoader.load('textures/roof/RoofingTiles009_1K_NormalGL.png', (texture) => {
-			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-			texture.repeat.set(8, 5);
-		});
-		const roofMaterial = new THREE.MeshStandardMaterial({
-			map: map,
-			displacementMap: textureLoader.load('textures/roof/RoofingTiles009_1K_Displacement.png'),
-			normalMap: normalMap,
-			roughnessMap: textureLoader.load('textures/roof/RoofingTiles009_1K_Roughness.png'),
-			displacementScale: 0
-		});
-		const roofGeometry = new THREE.ConeBufferGeometry(4 * Math.sqrt(2), 3, 4);
-		super(roofGeometry, roofMaterial);
-		super.rotateY(Math.PI / 4);
+	static add_pillar(scene) {
+		const shape = new THREE.Shape();
+		shape.lineTo(0.4, 0);
+		shape.lineTo(0.4, 3);
+		shape.lineTo(0, 3);
+		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.01});
+		const pillar = new THREE.Mesh(geometry, new WallMaterial());
+		pillar.castShadow = pillar.receiveShadow = true;
+		pillar.rotateY(Math.PI / 2);
+		pillar.position.set(3.8, 0.5, 4);
+		scene.add(pillar);
 	}
 }
 
 class Window extends THREE.Group {
-	constructor(width=1.5, height=1) {
+	constructor(width = 1.5, height = 1) {
 		super();
 		const thickness = 0.2;
-		const vFrameMesh = new THREE.Mesh(
+		const vertMesh = new THREE.Mesh(
 			new THREE.BoxBufferGeometry(thickness, height, 0.1),
-			new WoodMaterial()
+			new WallMaterial()
 		);
-		super.add(vFrameMesh);
+		super.add(vertMesh);
 		[-(width + thickness) / 4, (width + thickness) / 4].forEach(x => {
-			const hFrameMesh = new THREE.Mesh(
-				new THREE.BoxBufferGeometry((width - thickness)/ 2, thickness, 0.1),
-				new WoodMaterial()
+			const horizMesh = new THREE.Mesh(
+				new THREE.BoxBufferGeometry((width - thickness) / 2, thickness, 0.1),
+				new WallMaterial()
 			);
-			hFrameMesh.position.setX(x);
-			super.add(hFrameMesh);
+			horizMesh.position.setX(x);
+			super.add(horizMesh);
 		});
 		const glassGeometry = new THREE.BoxBufferGeometry(
 			(width - thickness) / 2,
@@ -526,87 +518,8 @@ class Door extends THREE.Group {
 	constructor(name) {
 		super();
 		super.name = name;
-		const doorGeometry = new THREE.BoxBufferGeometry(1, 2.3, 0.1);
-		const textureLoader = new THREE.TextureLoader();
-		const colorMap = textureLoader.load('textures/fence/Wood033_1K_Color.png', (texture) => {
-			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-			texture.repeat.set(0.6, 0.6);
-		});
-		const normalMap = textureLoader.load('textures/fence/Wood033_1K_NormalGL.png', (texture) => {
-			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-			texture.repeat.set(0.6, 0.6);
-		});
-		const material = new THREE.MeshStandardMaterial({
-			map: colorMap,
-			aoMap: textureLoader.load('textures/fence/Wood033_1K_AmbientOcclusion.png'),
-			normalMap: normalMap,
-			roughnessMap: textureLoader.load('textures/fence/Wood033_1K_Roughness.png'),
-			displacementMap: textureLoader.load('textures/fence/Wood033_1K_Displacement.png'),
-			displacementScale: 0
-		});
-		const doorMesh = new THREE.Mesh(doorGeometry, material);
-		super.add(doorMesh);
-	}
-}
-
-export class House extends THREE.Group {
-	constructor() {
-		super();
-		// Door step
-		const doorStep = new DoorStep();
-		doorStep.position.set(2.75, 0.4, 0.2);
-		super.add(doorStep);
-		// Pillar
-		const pillar = new Pillar();
-		pillar.position.set(3.8, 0.5, 4);
-		super.add(pillar);
-		// Front Wall
-		const frontWall = new FrontWall();
-		frontWall.position.set(-4, 0.5, 4);
-		super.add(frontWall);
-		// Back wall
-		const backWall = new BackWall();
-		backWall.position.set(-4, 0.5, -4);
-		super.add(backWall);
-		// Left wall
-		const leftWall = new LeftWall();
-		leftWall.position.set(-4, 0.5, 4);
-		super.add(leftWall);
-		// Right Wall
-		const rightWall = new RightWall();
-		rightWall.position.set(4, 0.5, 0);
-		super.add(rightWall);
-		// Right front wall
-		const rightFrontWall = new RightFrontWall();
-		rightFrontWall.position.set(1, 0.5, 0);
-		super.add(rightFrontWall);
-		// Right left wall
-		const rightLeftWall = new RightLeftWall();
-		rightLeftWall.position.set(1, 0.5, 4);
-		super.add(rightLeftWall);
-		// Inner left wall
-		const innerLeftWall = new InnerLeftWall();
-		innerLeftWall.position.set(-4, 0.5, 0);
-		super.add(innerLeftWall);
-		// Inner right wall
-		const innerRightWall = new InnerRightWall();
-		innerRightWall.position.set(1, 0.5, 0);
-		super.add(innerRightWall);
-		// Floor
-		const floor = new Floor();
-		floor.position.set(-4, 0.3, 4);
-		super.add(floor);
-		// Ceiling
-		const ceiling = new Ceiling();
-		ceiling.position.set(-4, 3.7, 4);
-		super.add(ceiling);
-		// Roof
-		const roof = new Roof();
-		roof.position.setY(5.4);
-		super.add(roof);
-		// Cast and receive shadows
-		super.traverse((object) => {
-			object.castShadow = object.receiveShadow = true;
-		});
+		const geometry = new THREE.BoxBufferGeometry(1, 2.3, 0.1);
+		const door = new THREE.Mesh(geometry, new WoodMaterial());
+		super.add(door);
 	}
 }
