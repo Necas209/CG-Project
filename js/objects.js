@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {Octree} from 'three/examples/jsm/math/Octree';
 
 class Ellipse extends THREE.Curve {
 	constructor(xRadius, yRadius) {
@@ -193,7 +194,62 @@ class GlassMaterial extends THREE.MeshPhysicalMaterial {
 	}
 }
 
+function updateWorldOctree(needsUpdate = false) {
+	if (needsUpdate) {
+		House.doorsOctree = new Octree();
+		House.doors.forEach(door => House.doorsOctree.fromGraphNode(door));
+	}
+}
+
 export class House {
+	// Update world Octree
+
+	static doors = [];
+	static doorsOctree = new Octree();
+
+	static animate_doors(deltaTime) {
+		House.doors.forEach(door => {
+			door.animate_door(deltaTime);
+		});
+	}
+
+	static check_doors(intersects) {
+		if (intersects[0].distance < 5) {
+			switch(intersects[0].object.parent.name) {
+			case 'front_door':
+				House.doors[0].check_door();
+				break;
+			case 'living_door':
+				House.doors[1].check_door();
+				break;
+			case 'bedroom_door':
+				House.doors[2].check_door();
+				break;
+			}
+		}
+	}
+
+	static add_doors(scene) {
+		const frontDoor = new Door('front_door');
+		frontDoor.castShadow = frontDoor.receiveShadow = true;
+		frontDoor.position.set(3.1, 1.65, 0);
+		House.doors.push(frontDoor);
+		const livingDoor = new Door('living_door');
+		livingDoor.castShadow = frontDoor.castShadow = true;
+		livingDoor.rotateY(Math.PI / 2);
+		livingDoor.position.set(1, 1.65, -2.6);
+		House.doors.push(livingDoor);
+		const bedroomDoor = new Door('bedroom_door');
+		bedroomDoor.castShadow = bedroomDoor.receiveShadow = true;
+		bedroomDoor.rotation.y = Math.PI;
+		bedroomDoor.position.set(-1.1, 1.65, 0);
+		House.doors.push(bedroomDoor);
+		House.doors.forEach(door => {
+			scene.add(door);
+			House.doorsOctree.fromGraphNode(door);
+		});
+	}
+
 	static add_floor(scene) {
 		const textureLoader = new THREE.TextureLoader();
 		const map = textureLoader.load('textures/floor/Wood062_1K_Color.png', (texture) => {
@@ -327,20 +383,16 @@ export class House {
 		shape.lineTo(3, 3);
 		shape.lineTo(0, 3);
 		const doorPath = new THREE.Path();
-		doorPath.moveTo(1, 0);
-		doorPath.lineTo(2, 0);
-		doorPath.lineTo(2, 2.3);
-		doorPath.lineTo(1, 2.3);
+		doorPath.moveTo(0.9, 0);
+		doorPath.lineTo(2.1, 0);
+		doorPath.lineTo(2.1, 2.3);
+		doorPath.lineTo(0.9, 2.3);
 		shape.holes.push(doorPath);
 		const wallGeometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.01});
 		const wall = new THREE.Mesh(wallGeometry, new WallMaterial());
 		wall.castShadow = wall.receiveShadow = true;
 		wall.position.set(1, 0.5, 0);
 		scene.add(wall);
-		const door = new Door('front_door');
-		door.castShadow = door.receiveShadow = true;
-		door.position.set(2.5, 1.65, 0);
-		scene.add(door);
 	}
 
 	static add_right_left_wall(scene) {
@@ -429,10 +481,10 @@ export class House {
 		shape.lineTo(5, 3);
 		shape.lineTo(0, 3);
 		const path = new THREE.Path();
-		path.moveTo(3, 0);
-		path.lineTo(4, 0);
-		path.lineTo(4, 2.3);
-		path.lineTo(3, 2.3);
+		path.moveTo(2.9, 0);
+		path.lineTo(4.1, 0);
+		path.lineTo(4.1, 2.3);
+		path.lineTo(2.9, 2.3);
 		shape.holes.push(path);
 		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.01});
 		const wall = new THREE.Mesh(geometry, new WallMaterial());
@@ -447,10 +499,10 @@ export class House {
 		shape.lineTo(4, 3);
 		shape.lineTo(0, 3);
 		const path = new THREE.Path();
-		path.moveTo(1.5, 0);
-		path.lineTo(2.5, 0);
-		path.lineTo(2.5, 2.3);
-		path.lineTo(1.5, 2.3);
+		path.moveTo(1.4, 0);
+		path.lineTo(2.6, 0);
+		path.lineTo(2.6, 2.3);
+		path.lineTo(1.4, 2.3);
 		shape.holes.push(path);
 		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.01});
 		const wall = new THREE.Mesh(geometry, new WallMaterial());
@@ -514,12 +566,60 @@ class Window extends THREE.Group {
 	}
 }
 
-class Door extends THREE.Group {
+class Door extends THREE.Object3D {
 	constructor(name) {
-		super();
-		super.name = name;
-		const geometry = new THREE.BoxBufferGeometry(1, 2.3, 0.1);
+		super(); // Pivot
+		this.name = name;
+		this.isOpening = false;
+		this.isClosing = false;
+		const geometry = new THREE.BoxBufferGeometry(1, 2.1, 0.1);
 		const door = new THREE.Mesh(geometry, new WoodMaterial());
-		super.add(door);
+		const geometry2 = new THREE.SphereBufferGeometry(0.05);
+		const handle = new THREE.Mesh(geometry2, new WallMaterial());
+		handle.position.set(-0.4, 0.1, 0.1);
+		door.add(handle);
+		const handle2 = handle.clone();
+		handle2.position.set(-0.4, 0.1, -0.1);
+		door.add(handle2);
+		door.position.setX(-0.6);
+		this.add(door);
+	}
+
+	check_door() {
+		let rot_y = this.rotation.y;
+		if (this.name === 'living_door')
+			rot_y -= Math.PI / 2;
+		if (this.name === 'bedroom_door')
+			rot_y -= Math.PI;
+		if (rot_y >= -Math.PI / 2) {
+			this.isOpening = true;
+			this.isClosing = false;
+		}
+		if (rot_y <= 0) {
+			this.isOpening = false;
+			this.isClosing = true;
+		}
+	}
+
+	animate_door(deltaTime) {
+		let rot_y = this.rotation.y;
+		if (this.name === 'living_door')
+			rot_y -= Math.PI / 2;
+		if (this.name === 'bedroom_door')
+			rot_y -= Math.PI;
+		if (rot_y < -Math.PI / 2) {
+			updateWorldOctree(this.isOpening);
+			this.isOpening = false;
+		}
+		if (rot_y > 0) {
+			updateWorldOctree(this.isClosing);
+			this.isClosing = false;
+		}
+		if (this.isOpening) {
+			this.rotation.y -= Math.PI / 6 * deltaTime;
+		}
+		if (this.isClosing) {
+			this.rotation.y += Math.PI / 6 * deltaTime;
+		}
 	}
 }

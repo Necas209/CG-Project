@@ -1,8 +1,9 @@
 import * as THREE from 'three';
-import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
-import { Octree } from 'three/examples/jsm/math/Octree';
-import { Capsule } from 'three/examples/jsm/math/Capsule';
-import { World } from 'World';
+import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockControls';
+import {Octree} from 'three/examples/jsm/math/Octree';
+import {Capsule} from 'three/examples/jsm/math/Capsule';
+import {World} from 'World';
+import {House} from 'objects';
 
 
 function main() {
@@ -19,7 +20,7 @@ function main() {
 	// World octree - for collisions
 	const worldOctree = new Octree();
 	// Player variables
-	const playerCollider = new Capsule(new THREE.Vector3(0, 0.8, 10), new THREE.Vector3(0, 2.5, 10), 0.2);
+	const playerCollider = new Capsule(new THREE.Vector3(3, 0.8, 2), new THREE.Vector3(3, 2.5, 2), 0.2);
 	const playerVelocity = new THREE.Vector3();
 	const playerDirection = new THREE.Vector3();
 	let playerOnFloor = false;
@@ -33,7 +34,7 @@ function main() {
 	// Add flashlight to camera
 	const spotLight = new THREE.SpotLight(0xffffff, 0);
 	spotLight.angle = Math.PI * 0.2;
-	spotLight.power = 20;
+	spotLight.power = 0; // Default: Off
 	spotLight.decay = 2;
 	camera.add(spotLight);
 	camera.add(spotLight.target);
@@ -70,9 +71,12 @@ function main() {
 	document.addEventListener('keyup', (event) => {
 		keyStates[event.code] = false;
 	});
+
 	// Player functions
 	function playerCollisions() {
-		const result = worldOctree.capsuleIntersect(playerCollider);
+		const door_res = House.doorsOctree.capsuleIntersect(playerCollider);
+		let result = worldOctree.capsuleIntersect(playerCollider);
+		result = door_res === false ? result : door_res;
 		playerOnFloor = false;
 		if (result) {
 			playerOnFloor = result.normal.y > 0;
@@ -83,6 +87,7 @@ function main() {
 		}
 
 	}
+
 	function updatePlayer(deltaTime) {
 		let damping = Math.exp(-4 * deltaTime) - 1;
 		if (!playerOnFloor) {
@@ -96,12 +101,14 @@ function main() {
 		playerCollisions();
 		camera.position.copy(playerCollider.end);
 	}
+
 	function getForwardVector() {
 		camera.getWorldDirection(playerDirection);
 		playerDirection.y = 0;
 		playerDirection.normalize();
 		return playerDirection;
 	}
+
 	function getSideVector() {
 		camera.getWorldDirection(playerDirection);
 		playerDirection.y = 0;
@@ -109,6 +116,7 @@ function main() {
 		playerDirection.cross(camera.up);
 		return playerDirection;
 	}
+
 	function controls(deltaTime) {
 		// gives a bit of air control
 		const speedDelta = deltaTime * (playerOnFloor ? 15 : 8);
@@ -130,6 +138,7 @@ function main() {
 			}
 		}
 	}
+
 	function teleportPlayerIfOob() {
 		if (camera.position.y <= -5) {
 			playerCollider.start.set(0, 0.5, 10);
@@ -139,12 +148,15 @@ function main() {
 			camera.rotation.set(0, 0, 0);
 		}
 	}
+
 	// World objects
 	World.add_ground(scene);
 	World.add_house(scene);
 	World.add_picket_fence(scene);
+	World.add_porch_lights(scene);
 	// World.add_trees(scene, worldOctree);
-	scene.traverse(object => { worldOctree.fromGraphNode(object); });
+	worldOctree.fromGraphNode(scene);
+	House.add_doors(scene);
 	// Ambient light
 	const light = new THREE.AmbientLight(0xFFFFE0, 1.5);
 	scene.add(light);
@@ -163,30 +175,23 @@ function main() {
 
 	// check for window resize
 	window.addEventListener('resize', onWindowResize, false);
+
 	function onWindowResize() {
 		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		render();
 	}
+
 	const raycaster = new THREE.Raycaster();
 	const pointer = new THREE.Vector2();
-	let isOpening = false;
-	let isClosing = false;
 	let intersects = [];
-	const door = scene.children.find((obj) => obj.name == 'front_door');
 	document.addEventListener('keypress', event => {
-		if (event.code == 'KeyE') {
-			if (intersects[0].object.parent.name == 'front_door' && intersects[0].distance < 5) {
-				if (door.rotation.y >= -Math.PI / 2) {
-					isOpening = true;
-				}
-				if (door.rotation.y <= 0) {
-					isClosing = true;
-				}
-			}
+		if (event.code === 'KeyE') {
+			House.check_doors(intersects);
 		}
 	});
+
 	// render function
 	function render() {
 		const deltaTime = Math.min(0.05, clock.getDelta()) / STEPS_PER_FRAME;
@@ -198,18 +203,7 @@ function main() {
 			raycaster.setFromCamera(pointer, camera);
 			// calculate objects intersecting the picking ray
 			intersects = raycaster.intersectObjects(scene.children, true);
-			if (door.rotation.y <= -Math.PI / 2) {
-				isOpening = false;
-			}
-			if (door.rotation.y >= 0) {
-				isClosing = false;
-			}
-			if (isOpening) {
-				door.rotation.y -= Math.PI / 6 * deltaTime;
-			}
-			if (isClosing) {
-				door.rotation.y += Math.PI / 6 * deltaTime;
-			}
+			House.animate_doors(deltaTime);
 		}
 		renderer.render(scene, camera);
 		requestAnimationFrame(render);

@@ -90,6 +90,8 @@
       <workItem from="1654009347026" duration="1067000" />
       <workItem from="1654010791409" duration="4389000" />
       <workItem from="1654015364074" duration="293000" />
+      <workItem from="1654076718790" duration="9940000" />
+      <workItem from="1654093594255" duration="14550000" />
     </task>
     <task id="LOCAL-00001" summary="small fixes">
       <created>1653920216022</created>
@@ -150,5 +152,17 @@
     <MESSAGE value="Roof + Windows + Porch lights" />
     <MESSAGE value="Raycast" />
     <option name="LAST_COMMIT_MESSAGE" value="Raycast" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/js/objects.js</url>
+          <line>601</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

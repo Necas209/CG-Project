@@ -22,13 +22,13 @@ export class World {
 			displacementMap: textureLoader.load('textures/ground/Moss001_1K_Displacement.png'),
 		});
 		const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
+		groundMesh.name = 'ground';
 		groundMesh.castShadow = groundMesh.receiveShadow = true;
 		groundMesh.rotateX(-Math.PI / 2);
 		scene.add(groundMesh);
 	}
 
 	static add_house(scene) {
-		// House
 		House.add_front_wall(scene);
 		House.add_back_wall(scene);
 		House.add_left_wall(scene);
@@ -41,7 +41,9 @@ export class World {
 		House.add_floor(scene);
 		House.add_ceiling(scene);
 		House.add_roof(scene);
-		// Porch lights
+	}
+
+	static add_porch_lights(scene) {
 		const porchLightLeft = new PorchLight();
 		porchLightLeft.rotateY(-Math.PI / 2);
 		porchLightLeft.position.set(-4.4, 1.8, 0);
@@ -91,34 +93,33 @@ export class World {
 			scene.add(picketFence);
 		}
 	}
-}
 
-export function add_trees(scene, worldOctree)
-{
-	const treePositions = [
-		[15, 0, -15], [13, 0, -9], [18, 0, -1],
-		[14.5, 0, 1], [13.5, 0, 10], [15, 0, 18],
-		[8, 0, 13.5], [-1, 0, 17], [-5, 0, 15],
-		[-13, 0, 15], [-17, 0, 6], [-15, 0, 4],
-		[-14, 0, -1], [-11, 0, -15], [-13.5, 0, -13],
-		[-10, 0, -17], [-6, 0, -13], [0, 0, -13.5],
-		[1, 0, -15], [8, 0, -14]
-	];
-	const gltfLoader = new GLTFLoader();
-	gltfLoader.load('objects/pine_tree/scene.gltf', (gltf) => {
-		gltf.scene.scale.set(0.04, 0.04, 0.04);
-		gltf.scene.traverse(child => {
-			if (child instanceof THREE.Mesh) {
-				child.castShadow = child.receiveShadow = true;
+	static add_trees(scene, worldOctree) {
+		const treePositions = [
+			[15, 0, -15], [13, 0, -9], [18, 0, -1],
+			[14.5, 0, 1], [13.5, 0, 10], [15, 0, 18],
+			[8, 0, 13.5], [-1, 0, 17], [-5, 0, 15],
+			[-13, 0, 15], [-17, 0, 6], [-15, 0, 4],
+			[-14, 0, -1], [-11, 0, -15], [-13.5, 0, -13],
+			[-10, 0, -17], [-6, 0, -13], [0, 0, -13.5],
+			[1, 0, -15], [8, 0, -14]
+		];
+		const gltfLoader = new GLTFLoader();
+		gltfLoader.load('objects/pine_tree/scene.gltf', (gltf) => {
+			gltf.scene.scale.set(0.04, 0.04, 0.04);
+			gltf.scene.traverse(child => {
+				if (child instanceof THREE.Mesh) {
+					child.castShadow = child.receiveShadow = true;
+				}
+			});
+			const trees = new THREE.Group();
+			for (let i = 0; i < 20; i++) {
+				const tree = gltf.scene.clone();
+				tree.position.set(treePositions[i][0], treePositions[i][1], treePositions[i][2]);
+				trees.add(tree);
 			}
+			scene.add(trees);
+			worldOctree.fromGraphNode(trees);
 		});
-		const trees = new THREE.Group();
-		for (let i = 0; i < 20; i++) {
-			const tree = gltf.scene.clone();
-			tree.position.set(treePositions[i][0], treePositions[i][1], treePositions[i][2]);
-			trees.add(tree);
-		}
-		scene.add(trees);
-		worldOctree.fromGraphNode(trees);
-	});
+	}
 }
