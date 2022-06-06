@@ -616,10 +616,10 @@ class Door extends THREE.Object3D {
 			this.isClosing = false;
 		}
 		if (this.isOpening) {
-			this.rotation.y -= Math.PI / 6 * deltaTime;
+			this.rotation.y -= Math.PI / 3 * deltaTime;
 		}
 		if (this.isClosing) {
-			this.rotation.y += Math.PI / 6 * deltaTime;
+			this.rotation.y += Math.PI / 3 * deltaTime;
 		}
 	}
 }

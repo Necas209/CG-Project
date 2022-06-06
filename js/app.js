@@ -31,14 +31,15 @@ function main() {
 		0.1,
 		1000
 	);
-	// Add flashlight to camera
-	const spotLight = new THREE.SpotLight(0xffffff, 0);
-	spotLight.angle = Math.PI * 0.2;
-	spotLight.power = 0; // Default: Off
-	spotLight.decay = 2;
-	camera.add(spotLight);
-	camera.add(spotLight.target);
-	spotLight.target.position.set(0, 0.5, -0.5);
+	// Add flashlight
+	const flashlight = new THREE.SpotLight(0xffffff, 0);
+	flashlight.power = 0; // Default: Off
+	flashlight.angle = Math.PI / 5;
+	flashlight.decay = 2;
+	camera.add(flashlight);
+	camera.add(flashlight.target);
+	flashlight.position.setY(-0.4);
+	flashlight.target.position.set(0, -0.4, -2);
 	scene.add(camera);
 	// Renderer
 	const renderer = new THREE.WebGLRenderer();
@@ -60,7 +61,7 @@ function main() {
 	// Turn on/off flashlight
 	document.addEventListener('keypress', (event) => {
 		if (event.code === 'KeyF') {
-			spotLight.power = (spotLight.power > 0) ? 0 : 20;
+			flashlight.power = (flashlight.power > 0) ? 0 : 20;
 		}
 	});
 	// Player controls and helper functions
