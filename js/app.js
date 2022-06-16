@@ -185,12 +185,18 @@ function main() {
 	}
 
 	const raycaster = new THREE.Raycaster();
-	const pointer = new THREE.Vector2();
 	let intersects = [];
 	document.addEventListener('keypress', event => {
 		if (event.code === 'KeyE') {
-			House.check_doors(intersects);
+			House.check_interactions(intersects);
 		}
+	});
+	let mouse = new THREE.Vector2();
+	document.addEventListener('mousemove', event => {
+		mouse = new THREE.Vector2(
+			(event.clientX / window.innerWidth) * 2 - 1,
+			-(event.clientY / window.innerHeight) * 2 + 1
+		);
 	});
 
 	// render function
@@ -201,9 +207,9 @@ function main() {
 			updatePlayer(deltaTime);
 			teleportPlayerIfOob();
 			// update the picking ray with the camera and pointer position
-			raycaster.setFromCamera(pointer, camera);
+			raycaster.setFromCamera(mouse, camera);
 			// calculate objects intersecting the picking ray
-			intersects = raycaster.intersectObjects(scene.children, true);
+			intersects = raycaster.intersectObjects(scene.children);
 			House.animate_doors(deltaTime);
 		}
 		renderer.render(scene, camera);

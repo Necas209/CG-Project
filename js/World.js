@@ -40,6 +40,7 @@ export class World {
 		House.add_pillar(scene);
 		House.add_floor(scene);
 		House.add_ceiling(scene);
+		House.add_ceiling_lights(scene);
 		House.add_roof(scene);
 	}
 

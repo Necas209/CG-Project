@@ -18,7 +18,8 @@
   },
   "homepage": "https://github.com/Necas209/CG-Project#readme",
   "dependencies": {
-    "three": "^0.139.2"
+    "three": "^0.139.2",
+    "three-csg-ts": "^3.1.10"
   },
   "devDependencies": {
     "@types/three": "^0.140.0",

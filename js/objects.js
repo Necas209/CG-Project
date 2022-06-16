@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {Octree} from 'three/examples/jsm/math/Octree';
+import {CSG} from 'three-csg-ts';
 
 class Ellipse extends THREE.Curve {
 	constructor(xRadius, yRadius) {
@@ -12,8 +13,7 @@ class Ellipse extends THREE.Curve {
 	getPoint(t, optionalTarget) {
 		const radians = 2 * Math.PI * t;
 		// noinspection JSValidateTypes
-		return new THREE.Vector3(this.xRadius * Math.cos(radians),
-			this.yRadius * Math.sin(radians), 0);
+		return new THREE.Vector3(this.xRadius * Math.cos(radians), this.yRadius * Math.sin(radians), 0);
 	}
 }
 
@@ -41,7 +41,7 @@ export class PicketFence extends THREE.Mesh {
 		shape.lineTo(-0.5, 0.9);
 		shape.lineTo(0, 0.9);
 		// Fence geometry and material
-		const fenceGeometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0});
+		const fenceGeometry = new THREE.ExtrudeGeometry(shape, {depth: 0});
 		super(fenceGeometry, new WoodMaterial());
 		super.castShadow = super.receiveShadow = true;
 	}
@@ -60,11 +60,11 @@ export class PorchLight extends THREE.Group {
 			displacementScale: 0
 		});
 		// Base
-		const baseGeometry = new THREE.BoxBufferGeometry(0.2, 0.05, 0.2);
+		const baseGeometry = new THREE.BoxGeometry(0.2, 0.05, 0.2);
 		const baseMesh = new THREE.Mesh(baseGeometry, metalMaterial);
 		super.add(baseMesh);
 		// Sides
-		const sideGeometry = new THREE.BoxBufferGeometry(0.02, 0.3, 0.02);
+		const sideGeometry = new THREE.BoxGeometry(0.02, 0.3, 0.02);
 		const sidePos = [[-0.09, -0.09], [0.09, -0.09], [0.09, 0.09], [-0.09, 0.09]];
 		sidePos.forEach((pos) => {
 			const sideMesh = new THREE.Mesh(sideGeometry, metalMaterial);
@@ -72,7 +72,7 @@ export class PorchLight extends THREE.Group {
 			super.add(sideMesh);
 		});
 		// Glass Sides
-		const glassGeometry = new THREE.BoxBufferGeometry(0.01, 0.3, 0.16);
+		const glassGeometry = new THREE.BoxGeometry(0.01, 0.3, 0.16);
 		const glassPos = [[-0.09, 0], [0, -0.09], [0.09, 0], [0, 0.09]];
 		glassPos.forEach((pos, i) => {
 			const glassMesh = new THREE.Mesh(glassGeometry, new GlassMaterial());
@@ -81,24 +81,24 @@ export class PorchLight extends THREE.Group {
 			super.add(glassMesh);
 		});
 		// Top
-		const topGeometry = new THREE.ConeBufferGeometry(0.15, 0.1, 4);
+		const topGeometry = new THREE.ConeGeometry(0.15, 0.1, 4);
 		const topMesh = new THREE.Mesh(topGeometry, metalMaterial);
 		topMesh.position.set(0, 0.375, 0);
 		topMesh.rotateY(Math.PI / 4);
 		super.add(topMesh);
 		// Hook
-		const hookGeometry = new THREE.BoxBufferGeometry(0.2, 0.015, 0.015);
+		const hookGeometry = new THREE.BoxGeometry(0.2, 0.015, 0.015);
 		const hookMesh = new THREE.Mesh(hookGeometry, metalMaterial);
 		hookMesh.position.set(0.08, 0.61, 0);
 		super.add(hookMesh);
 		// Hook Base
-		const hookBaseGeometry = new THREE.BoxBufferGeometry(0.02, 0.1, 0.1);
+		const hookBaseGeometry = new THREE.BoxGeometry(0.02, 0.1, 0.1);
 		const hookBaseMesh = new THREE.Mesh(hookBaseGeometry, metalMaterial);
 		hookBaseMesh.position.set(0.19, 0.61, 0);
 		super.add(hookBaseMesh);
 		// Chain
 		const ringPath = new Ellipse(0.015, 0.03);
-		const ringGeometry = new THREE.TubeBufferGeometry(ringPath, 64, 0.005, 16, true);
+		const ringGeometry = new THREE.TubeGeometry(ringPath, 64, 0.005, 16, true);
 		const chain = new THREE.Group();
 		for (let i = 0; i < 4; i++) {
 			const ringMesh = new THREE.Mesh(ringGeometry, metalMaterial);
@@ -112,7 +112,7 @@ export class PorchLight extends THREE.Group {
 		});
 		super.add(chain);
 		// Candle
-		const candleGeometry = new THREE.CylinderBufferGeometry(0.05, 0.05, 0.2);
+		const candleGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.2);
 		const candleMaterial = new THREE.MeshStandardMaterial({color: 0xfffff0});
 		const candleMesh = new THREE.Mesh(candleGeometry, candleMaterial);
 		candleMesh.position.set(0, 0.125, 0);
@@ -120,11 +120,9 @@ export class PorchLight extends THREE.Group {
 		// Flame
 		const candleLight = new THREE.PointLight(0xfbb741, 1, 100, 2);
 		candleLight.power = 15;
-		const flameGeometry = new THREE.ConeBufferGeometry(0.02, 0.06);
+		const flameGeometry = new THREE.ConeGeometry(0.02, 0.06);
 		const flameMaterial = new THREE.MeshStandardMaterial({
-			emissive: 0xfbb741,
-			emissiveIntensity: 2,
-			color: 0x000000
+			emissive: 0xfbb741, emissiveIntensity: 2, color: 0x000000
 		});
 		candleLight.add(new THREE.Mesh(flameGeometry, flameMaterial));
 		candleLight.position.set(0, 0.25, 0);
@@ -202,8 +200,7 @@ function updateWorldOctree(needsUpdate = false) {
 }
 
 export class House {
-	// Update world Octree
-
+	static switches = [];
 	static doors = [];
 	static doorsOctree = new Octree();
 
@@ -213,9 +210,9 @@ export class House {
 		});
 	}
 
-	static check_doors(intersects) {
+	static check_interactions(intersects) {
 		if (intersects[0].distance < 5) {
-			switch(intersects[0].object.parent.name) {
+			switch (intersects[0].object.parent.name) {
 			case 'front_door':
 				House.doors[0].check_door();
 				break;
@@ -225,8 +222,47 @@ export class House {
 			case 'bedroom_door':
 				House.doors[2].check_door();
 				break;
+			default:
+				switch (intersects[0].object.parent?.parent.name) {
+				case 'switch1':
+					House.switches[0].turn_on_off();
+					break;
+				case 'switch2':
+					House.switches[0].turn_on_off();
+					break;
+				case 'switch3':
+					House.switches[0].turn_on_off();
+					break;
+				}
 			}
 		}
+	}
+
+	static add_ceiling_lights(scene) {
+		const light1 = new CeilingLight();
+		light1.position.set(2.75, 3.3, -2.6);
+		scene.add(light1);
+		const switch1 = new LightSwitch('switch1', light1);
+		switch1.rotateZ(-Math.PI / 2);
+		switch1.position.set(1.22, 2, -1);
+		scene.add(switch1);
+		House.switches.push(switch1);
+		// const light2 = new CeilingLight();
+		// light2.position.set(2.75, 3.3, -2.6);
+		// scene.add(light2);
+		// const switch2 = new LightSwitch('switch1', light2);
+		// switch2.rotateZ(-Math.PI / 2);
+		// switch2.position.set(1.22, 2, -1);
+		// scene.add(switch2);
+		// House.switches.push(switch2);
+		// const light3 = new CeilingLight();
+		// light3.position.set(2.75, 3.3, -2.6);
+		// scene.add(light3);
+		// const switch3 = new LightSwitch('switch1', light3);
+		// switch3.rotateZ(-Math.PI / 2);
+		// switch3.position.set(1.22, 2, -1);
+		// scene.add(switch3);
+		// House.switches.push(switch3);
 	}
 
 	static add_doors(scene) {
@@ -272,7 +308,7 @@ export class House {
 		shape.lineTo(8, 4);
 		shape.lineTo(8, 8);
 		shape.lineTo(0, 8);
-		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.0001});
+		const geometry = new THREE.ExtrudeGeometry(shape, {depth: 0.0001});
 		const floor = new THREE.Mesh(geometry, material);
 		floor.castShadow = floor.receiveShadow = true;
 		floor.rotateX(-Math.PI / 2);
@@ -285,7 +321,7 @@ export class House {
 		shape.lineTo(8, 0);
 		shape.lineTo(8, 8);
 		shape.lineTo(0, 8);
-		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.0001});
+		const geometry = new THREE.ExtrudeGeometry(shape, {depth: 0.0001});
 		const ceiling = new THREE.Mesh(geometry, new WallMaterial());
 		ceiling.castShadow = ceiling.receiveShadow = true;
 		ceiling.rotateX(-Math.PI / 2);
@@ -310,7 +346,7 @@ export class House {
 			roughnessMap: textureLoader.load('textures/roof/RoofingTiles009_1K_Roughness.png'),
 			displacementScale: 0
 		});
-		const geometry = new THREE.ConeBufferGeometry(4 * Math.sqrt(2), 3, 4);
+		const geometry = new THREE.ConeGeometry(4 * Math.sqrt(2), 3, 4);
 		const roof = new THREE.Mesh(geometry, material);
 		roof.castShadow = roof.receiveShadow = true;
 		roof.rotateY(Math.PI / 4);
@@ -335,7 +371,7 @@ export class House {
 		rightWindowPath.lineTo(7, 2);
 		rightWindowPath.lineTo(5.5, 2);
 		wallShape.holes.push(rightWindowPath);
-		const wallGeometry = new THREE.ExtrudeBufferGeometry(wallShape, {depth: 0.01});
+		const wallGeometry = new THREE.ExtrudeGeometry(wallShape, {depth: 0.01});
 		const wallMesh = new THREE.Mesh(wallGeometry, new WallMaterial());
 		wallMesh.castShadow = wallMesh.receiveShadow = true;
 		wallMesh.rotateY(Math.PI / 2);
@@ -364,7 +400,7 @@ export class House {
 		windowPath.lineTo(3, 2);
 		windowPath.lineTo(1.5, 2);
 		shape.holes.push(windowPath);
-		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.01});
+		const geometry = new THREE.ExtrudeGeometry(shape, {depth: 0.01});
 		const wall = new THREE.Mesh(geometry, new WallMaterial());
 		wall.castShadow = wall.receiveShadow = true;
 		wall.rotateY(Math.PI / 2);
@@ -388,7 +424,7 @@ export class House {
 		doorPath.lineTo(2.1, 2.3);
 		doorPath.lineTo(0.9, 2.3);
 		shape.holes.push(doorPath);
-		const wallGeometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.01});
+		const wallGeometry = new THREE.ExtrudeGeometry(shape, {depth: 0.01});
 		const wall = new THREE.Mesh(wallGeometry, new WallMaterial());
 		wall.castShadow = wall.receiveShadow = true;
 		wall.position.set(1, 0.5, 0);
@@ -402,7 +438,7 @@ export class House {
 		wallShape.lineTo(4, 3);
 		wallShape.lineTo(0, 3);
 		wallShape.moveTo(0, 0);
-		const wallGeometry = new THREE.ExtrudeBufferGeometry(wallShape, {depth: 0.01});
+		const wallGeometry = new THREE.ExtrudeGeometry(wallShape, {depth: 0.01});
 		const wall = new THREE.Mesh(wallGeometry, new WallMaterial());
 		wall.castShadow = wall.receiveShadow = true;
 		wall.rotateY(Math.PI / 2);
@@ -421,7 +457,7 @@ export class House {
 		path.lineTo(3.25, 2);
 		path.lineTo(1.75, 2);
 		shape.holes.push(path);
-		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.01});
+		const geometry = new THREE.ExtrudeGeometry(shape, {depth: 0.01});
 		const wallMesh = new THREE.Mesh(geometry, new WallMaterial());
 		wallMesh.castShadow = wallMesh.receiveShadow = true;
 		wallMesh.position.set(-4, 0.5, 4);
@@ -433,7 +469,7 @@ export class House {
 		const doorStepShape = new THREE.Shape();
 		doorStepShape.lineTo(0.8, 0);
 		doorStepShape.lineTo(0, 0.04);
-		const doorStepGeometry = new THREE.ExtrudeBufferGeometry(doorStepShape, {depth: 0.5});
+		const doorStepGeometry = new THREE.ExtrudeGeometry(doorStepShape, {depth: 0.5});
 		const doorstep = new THREE.Mesh(doorStepGeometry, new WallMaterial());
 		doorstep.castShadow = doorstep.receiveShadow = true;
 		doorstep.rotateY(-Math.PI / 2);
@@ -460,7 +496,7 @@ export class House {
 		rightWindowPath.lineTo(7, 2);
 		rightWindowPath.lineTo(6, 2);
 		shape.holes.push(rightWindowPath);
-		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.01});
+		const geometry = new THREE.ExtrudeGeometry(shape, {depth: 0.01});
 		const wall = new THREE.Mesh(geometry, new WallMaterial());
 		wall.castShadow = wall.receiveShadow = true;
 		wall.position.set(-4, 0.5, -4);
@@ -486,7 +522,7 @@ export class House {
 		path.lineTo(4.1, 2.3);
 		path.lineTo(2.9, 2.3);
 		shape.holes.push(path);
-		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.01});
+		const geometry = new THREE.ExtrudeGeometry(shape, {depth: 0.01});
 		const wall = new THREE.Mesh(geometry, new WallMaterial());
 		wall.castShadow = wall.receiveShadow = true;
 		wall.position.set(-4, 0.5, 0);
@@ -504,7 +540,7 @@ export class House {
 		path.lineTo(2.6, 2.3);
 		path.lineTo(1.4, 2.3);
 		shape.holes.push(path);
-		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.01});
+		const geometry = new THREE.ExtrudeGeometry(shape, {depth: 0.01});
 		const wall = new THREE.Mesh(geometry, new WallMaterial());
 		wall.castShadow = wall.receiveShadow = true;
 		wall.rotateY(Math.PI / 2);
@@ -517,7 +553,7 @@ export class House {
 		shape.lineTo(0.4, 0);
 		shape.lineTo(0.4, 3);
 		shape.lineTo(0, 3);
-		const geometry = new THREE.ExtrudeBufferGeometry(shape, {depth: 0.01});
+		const geometry = new THREE.ExtrudeGeometry(shape, {depth: 0.01});
 		const pillar = new THREE.Mesh(geometry, new WallMaterial());
 		pillar.castShadow = pillar.receiveShadow = true;
 		pillar.rotateY(Math.PI / 2);
@@ -526,41 +562,89 @@ export class House {
 	}
 }
 
+class LightSwitch extends THREE.Group {
+	constructor(name, ceilingLight) {
+		super();
+		this.name = name;
+		this.ceilingLight = ceilingLight;
+		const switchMaterial = new THREE.MeshStandardMaterial({color: 'white'});
+		const borderGeometry = new THREE.CylinderGeometry(0.09, 0.1, 0.01, 4);
+		const borderMesh = new THREE.Mesh(borderGeometry, switchMaterial);
+		borderMesh.rotateY(Math.PI / 4);
+		// Add edges
+		let geometry = new THREE.EdgesGeometry(borderMesh.geometry);
+		let material = new THREE.LineBasicMaterial({color: 0x3B3C36, linewidth: 2});
+		let edges = new THREE.LineSegments(geometry, material);
+		borderMesh.add(edges);
+		this.add(borderMesh);
+		const switchGeometry = new THREE.BoxGeometry(0.01, 0.01, 0.05);
+		const switchMesh = new THREE.Mesh(switchGeometry, switchMaterial);
+		switchMesh.rotateX(-Math.PI / 4);
+		// Add edges
+		geometry = new THREE.EdgesGeometry(switchMesh.geometry);
+		material = new THREE.LineBasicMaterial({color: 0x3B3C36, linewidth: 2});
+		edges = new THREE.LineSegments(geometry, material);
+		switchMesh.add(edges);
+		this.switch = switchMesh;
+		this.add(switchMesh);
+		this.rotateX(Math.PI / 2);
+	}
+
+	turn_on_off() {
+		if (this.rotation.x >= -Math.PI / 4)
+			this.switch.rotateX(Math.PI / 2);
+		else
+			this.switch.rotateX(-Math.PI / 2);
+		this.ceilingLight.on_off_light();
+	}
+}
+
+class CeilingLight extends THREE.Group {
+	constructor() {
+		super();
+		const outerLampGeometry = new THREE.CylinderGeometry(0.06, 0.16, 0.2);
+		const innerLampGeometry = new THREE.CylinderGeometry(0.05, 0.15, 0.2);
+		const lampMaterial = new THREE.MeshPhysicalMaterial({
+			color: 'white', transmission: 0.2
+		});
+		const outerLampMesh = new THREE.Mesh(outerLampGeometry, lampMaterial);
+		const innerLampMesh = new THREE.Mesh(innerLampGeometry, lampMaterial);
+		const lampMesh = CSG.subtract(outerLampMesh, innerLampMesh);
+		this.add(lampMesh);
+		// Flame
+		const light = new THREE.PointLight(0xfad16b, 1, 100, 2);
+		light.power = 0;
+		const bulbGeometry = new THREE.SphereGeometry(0.05);
+		const bulbMaterial = new THREE.MeshStandardMaterial({
+			emissive: 0xfad16b, emissiveIntensity: 2, color: 0x000000
+		});
+		light.add(new THREE.Mesh(bulbGeometry, bulbMaterial));
+		light.position.set(0, -0.02, 0);
+		this.light = light;
+		super.add(light);
+	}
+
+	on_off_light() {
+		this.light.power = this.light.power === 0 ? 150 : 0;
+	}
+}
+
 class Window extends THREE.Group {
 	constructor(width = 1.5, height = 1) {
 		super();
 		const thickness = 0.2;
-		const vertMesh = new THREE.Mesh(
-			new THREE.BoxBufferGeometry(thickness, height, 0.1),
-			new WallMaterial()
-		);
+		const vertMesh = new THREE.Mesh(new THREE.BoxGeometry(thickness, height, 0.1), new WallMaterial());
 		super.add(vertMesh);
 		[-(width + thickness) / 4, (width + thickness) / 4].forEach(x => {
-			const horizMesh = new THREE.Mesh(
-				new THREE.BoxBufferGeometry((width - thickness) / 2, thickness, 0.1),
-				new WallMaterial()
-			);
+			const horizMesh = new THREE.Mesh(new THREE.BoxGeometry((width - thickness) / 2, thickness, 0.1), new WallMaterial());
 			horizMesh.position.setX(x);
 			super.add(horizMesh);
 		});
-		const glassGeometry = new THREE.BoxBufferGeometry(
-			(width - thickness) / 2,
-			(height - thickness) / 2,
-			0.1
-		);
-		const glassPos = [
-			[0, 0],
-			[(width + thickness) / 2, 0],
-			[(width + thickness) / 2, (height + thickness) / 2],
-			[0, (height + thickness) / 2]
-		];
+		const glassGeometry = new THREE.BoxGeometry((width - thickness) / 2, (height - thickness) / 2, 0.1);
+		const glassPos = [[0, 0], [(width + thickness) / 2, 0], [(width + thickness) / 2, (height + thickness) / 2], [0, (height + thickness) / 2]];
 		glassPos.forEach(xy => {
 			const glassMesh = new THREE.Mesh(glassGeometry, new GlassMaterial());
-			glassMesh.position.set(
-				xy[0] - (width + thickness) / 4,
-				xy[1] - (height + thickness) / 4,
-				0
-			);
+			glassMesh.position.set(xy[0] - (width + thickness) / 4, xy[1] - (height + thickness) / 4, 0);
 			super.add(glassMesh);
 		});
 	}
@@ -572,9 +656,9 @@ class Door extends THREE.Object3D {
 		this.name = name;
 		this.isOpening = false;
 		this.isClosing = false;
-		const geometry = new THREE.BoxBufferGeometry(1, 2.1, 0.1);
+		const geometry = new THREE.BoxGeometry(1, 2.1, 0.1);
 		const door = new THREE.Mesh(geometry, new WoodMaterial());
-		const geometry2 = new THREE.SphereBufferGeometry(0.05);
+		const geometry2 = new THREE.SphereGeometry(0.05);
 		const handle = new THREE.Mesh(geometry2, new WallMaterial());
 		handle.position.set(-0.4, 0.1, 0.1);
 		door.add(handle);
@@ -587,10 +671,8 @@ class Door extends THREE.Object3D {
 
 	check_door() {
 		let rot_y = this.rotation.y;
-		if (this.name === 'living_door')
-			rot_y -= Math.PI / 2;
-		if (this.name === 'bedroom_door')
-			rot_y -= Math.PI;
+		if (this.name === 'living_door') rot_y -= Math.PI / 2;
+		if (this.name === 'bedroom_door') rot_y -= Math.PI;
 		if (rot_y >= -Math.PI / 2) {
 			this.isOpening = true;
 			this.isClosing = false;
@@ -603,10 +685,8 @@ class Door extends THREE.Object3D {
 
 	animate_door(deltaTime) {
 		let rot_y = this.rotation.y;
-		if (this.name === 'living_door')
-			rot_y -= Math.PI / 2;
-		if (this.name === 'bedroom_door')
-			rot_y -= Math.PI;
+		if (this.name === 'living_door') rot_y -= Math.PI / 2;
+		if (this.name === 'bedroom_door') rot_y -= Math.PI;
 		if (rot_y < -Math.PI / 2) {
 			updateWorldOctree(this.isOpening);
 			this.isOpening = false;
