@@ -234,10 +234,9 @@ export class House {
 			let name = intersects[0].object.parent.name;
 			if (name.includes('door')) {
 				House.doors[name].check_door();
-			}
-			else {
+			} else {
 				name = intersects[0].object.parent.parent?.name;
-				if(name?.includes('switch')) {
+				if (name?.includes('switch')) {
 					House.switches[name].turn_on_off();
 				}
 			}

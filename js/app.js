@@ -5,7 +5,6 @@ import {Capsule} from 'three/examples/jsm/math/Capsule';
 import {World} from 'World';
 import {Flashlight, House} from 'objects';
 
-
 function main() {
 	// Clock and scene
 	const clock = new THREE.Clock();
@@ -16,7 +15,11 @@ function main() {
 	// World octree - for collisions
 	const worldOctree = new Octree();
 	// Player variables
-	const playerCollider = new Capsule(new THREE.Vector3(3, 0.8, 2), new THREE.Vector3(3, 2.5, 2), 0.2);
+	const playerCollider = new Capsule(
+		new THREE.Vector3(3, 0.8, 2),
+		new THREE.Vector3(3, 2.5, 2),
+		0.2
+	);
 	const playerVelocity = new THREE.Vector3();
 	const playerDirection = new THREE.Vector3();
 	let playerOnFloor = false;
@@ -62,19 +65,13 @@ function main() {
 	const menuPanel = document.getElementById('menuPanel');
 	const startButton = document.getElementById('startButton');
 	let pl_controls = new PointerLockControls(perspectiveCamera, renderer.domElement);
-	pl_controls.addEventListener('lock', () => (menuPanel.style.display = 'none'));
-	pl_controls.addEventListener('unlock', () => (menuPanel.style.display = 'block'));
-	startButton.addEventListener('click', () => {
-		pl_controls.lock();
-	}, false);
+	pl_controls.addEventListener('lock', () => menuPanel.style.display = 'none');
+	pl_controls.addEventListener('unlock', () => menuPanel.style.display = 'block');
+	startButton.addEventListener('click', () => pl_controls.lock(), false);
 	// Player controls and helper functions
 	const keyStates = {};
-	document.addEventListener('keydown', (event) => {
-		keyStates[event.code] = true;
-	});
-	document.addEventListener('keyup', (event) => {
-		keyStates[event.code] = false;
-	});
+	document.addEventListener('keydown', event => keyStates[event.code] = true);
+	document.addEventListener('keyup', event => keyStates[event.code] = false);
 	let intersects = [];
 	document.addEventListener('keypress', event => {
 		// Turn on/off flashlight
@@ -193,9 +190,7 @@ function main() {
 		'textures/background/neg-y.png',
 		'textures/background/pos-z.png',
 		'textures/background/neg-z.png',
-	], (texture) => {
-		scene.background = texture;
-	});
+	], texture => scene.background = texture);
 	// check for window resize
 	window.addEventListener('resize', () => {
 		cameras[cameraType].aspect = window.innerWidth / window.innerHeight;
