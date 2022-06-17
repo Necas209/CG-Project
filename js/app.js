@@ -62,8 +62,8 @@ function main() {
 	renderer.setPixelRatio(window.devicePixelRatio);
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.physicallyCorrectLights = true;
-	// renderer.shadowMap.enabled = true;
-	// renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+	renderer.shadowMap.enabled = true;
+	renderer.shadowMap.type = THREE.BasicShadowMap;
 	document.body.appendChild(renderer.domElement);
 	// Pointer-lock controls
 	const menuPanel = document.getElementById('menuPanel');

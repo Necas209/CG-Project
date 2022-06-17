@@ -22,8 +22,7 @@ export class World {
 			displacementMap: textureLoader.load('textures/ground/Moss001_1K_Displacement.png'),
 		});
 		const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
-		groundMesh.name = 'ground';
-		groundMesh.castShadow = groundMesh.receiveShadow = true;
+		groundMesh.receiveShadow = true;
 		groundMesh.rotateX(-Math.PI / 2);
 		scene.add(groundMesh);
 	}

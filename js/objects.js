@@ -701,13 +701,26 @@ class Window extends THREE.Group {
 		const thickness = 0.2;
 		const vertMesh = new THREE.Mesh(new THREE.BoxGeometry(thickness, height, 0.1), new WallMaterial());
 		super.add(vertMesh);
-		[-(width + thickness) / 4, (width + thickness) / 4].forEach(x => {
-			const horizMesh = new THREE.Mesh(new THREE.BoxGeometry((width - thickness) / 2, thickness, 0.1), new WallMaterial());
+		const dimensions = [-(width + thickness) / 4, (width + thickness) / 4];
+		dimensions.forEach(x => {
+			const horizMesh = new THREE.Mesh(
+				new THREE.BoxGeometry((width - thickness) / 2, thickness, 0.1),
+				new WallMaterial()
+			);
 			horizMesh.position.setX(x);
 			super.add(horizMesh);
 		});
-		const glassGeometry = new THREE.BoxGeometry((width - thickness) / 2, (height - thickness) / 2, 0.1);
-		const glassPos = [[0, 0], [(width + thickness) / 2, 0], [(width + thickness) / 2, (height + thickness) / 2], [0, (height + thickness) / 2]];
+		const glassGeometry = new THREE.BoxGeometry(
+			(width - thickness) / 2,
+			(height - thickness) / 2,
+			0.1
+		);
+		const glassPos = [
+			[0, 0],
+			[(width + thickness) / 2, 0],
+			[(width + thickness) / 2, (height + thickness) / 2],
+			[0, (height + thickness) / 2]
+		];
 		glassPos.forEach(xy => {
 			const glassMesh = new THREE.Mesh(glassGeometry, new GlassMaterial());
 			glassMesh.position.set(xy[0] - (width + thickness) / 4, xy[1] - (height + thickness) / 4, 0);
