@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {Octree} from 'three/examples/jsm/math/Octree';
 import {CSG} from 'three-csg-ts';
+import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
 
 class Ellipse extends THREE.Curve {
 	constructor(xRadius, yRadius) {
@@ -625,6 +626,58 @@ export class House {
 		pillar.rotateY(Math.PI / 2);
 		pillar.position.set(3.8, 0.5, 4);
 		scene.add(pillar);
+	}
+
+	static add_furniture(scene, worldOctree) {
+		const loader = new GLTFLoader();
+		loader.load('objects/table_chairs/scene.gltf', gltf => {
+			const table = gltf.scene;
+			table.scale.set(0.012, 0.012, 0.012);
+			table.traverse(child => {
+				if (child instanceof THREE.Mesh) {
+					child.castShadow = child.receiveShadow = true;
+				}
+			});
+			table.position.set(-2,0.55, -2);
+			scene.add(table);
+			worldOctree.fromGraphNode(table);
+		});
+		loader.load('objects/carpet/scene.gltf', gltf => {
+			const carpet = gltf.scene;
+			carpet.scale.set(2, 2, 2);
+			carpet.traverse(child => {
+				if (child instanceof THREE.Mesh) {
+					child.castShadow = child.receiveShadow = true;
+				}
+			});
+			carpet.position.set(-2,0.5, -2);
+			scene.add(carpet);
+			worldOctree.fromGraphNode(carpet);
+		});
+		loader.load('objects/bed/scene.gltf', gltf => {
+			const bed = gltf.scene;
+			bed.rotateY(Math.PI / 2);
+			bed.traverse(child => {
+				if (child instanceof THREE.Mesh) {
+					child.castShadow = child.receiveShadow = true;
+				}
+			});
+			bed.position.set(-2.7,0.55, 2);
+			scene.add(bed);
+			worldOctree.fromGraphNode(bed);
+		});
+		loader.load('objects/wardrobe/scene.gltf', gltf => {
+			const wardrobe = gltf.scene;
+			wardrobe.rotateY(-Math.PI / 2);
+			wardrobe.traverse(child => {
+				if (child instanceof THREE.Mesh) {
+					child.castShadow = child.receiveShadow = true;
+				}
+			});
+			wardrobe.position.set(-0.6,0.6, 2);
+			scene.add(wardrobe);
+			worldOctree.fromGraphNode(wardrobe);
+		});
 	}
 }
 

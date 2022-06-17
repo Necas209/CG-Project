@@ -27,7 +27,7 @@ export class World {
 		scene.add(groundMesh);
 	}
 
-	static add_house(scene) {
+	static add_house(scene, worldOctree) {
 		House.add_front_wall(scene);
 		House.add_back_wall(scene);
 		House.add_left_wall(scene);
@@ -41,6 +41,7 @@ export class World {
 		House.add_ceiling(scene);
 		House.add_ceiling_lights(scene);
 		House.add_roof(scene);
+		House.add_furniture(scene, worldOctree);
 	}
 
 	static add_porch_lights(scene) {

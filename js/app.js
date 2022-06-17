@@ -84,7 +84,6 @@ function main() {
 		}
 		// Check player interactions with scene
 		if (event.code === 'KeyE') {
-			console.log(intersects);
 			House.check_interactions(intersects);
 		}
 		// Switch cameras
@@ -175,7 +174,7 @@ function main() {
 
 	// World objects
 	World.add_ground(scene);
-	World.add_house(scene);
+	World.add_house(scene, worldOctree);
 	World.add_picket_fence(scene);
 	World.add_porch_lights(scene);
 	World.add_trees(scene, worldOctree);
