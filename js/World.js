@@ -97,13 +97,11 @@ export class World {
 
 	static add_trees(scene, worldOctree) {
 		const treePositions = [
-			[15, 0, -15], [13, 0, -9], [18, 0, -1],
-			[14.5, 0, 1], [13.5, 0, 10], [15, 0, 18],
-			[8, 0, 13.5], [-1, 0, 17], [-5, 0, 15],
-			[-13, 0, 15], [-17, 0, 6], [-15, 0, 4],
-			[-14, 0, -1], [-11, 0, -15], [-13.5, 0, -13],
-			[-10, 0, -17], [-6, 0, -13], [0, 0, -13.5],
-			[1, 0, -15], [8, 0, -14]
+			[15, 0, -15], [18, 0, -1],
+			[14.5, 0, 1], [8, 0, 13.5],
+			[-5, 0, 15], [-13, 0, 15],
+			[-14, 0, -1], [-13.5, 0, -13],
+			[-10, 0, -17], [8, 0, -14]
 		];
 		const gltfLoader = new GLTFLoader();
 		gltfLoader.load('objects/pine_tree/scene.gltf', (gltf) => {
@@ -114,7 +112,7 @@ export class World {
 				}
 			});
 			const trees = new THREE.Group();
-			for (let i = 0; i < 20; i++) {
+			for (let i = 0; i < 10; i++) {
 				const tree = gltf.scene.clone();
 				tree.position.set(treePositions[i][0], treePositions[i][1], treePositions[i][2]);
 				trees.add(tree);

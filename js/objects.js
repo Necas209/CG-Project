@@ -119,7 +119,7 @@ export class PorchLight extends THREE.Group {
 		super.add(candleMesh);
 		// Flame
 		const candleLight = new THREE.PointLight(0xfbb741, 1, 100, 2);
-		candleLight.power = 15;
+		candleLight.power = 20;
 		const flameGeometry = new THREE.ConeGeometry(0.02, 0.06);
 		const flameMaterial = new THREE.MeshStandardMaterial({
 			emissive: 0xfbb741, emissiveIntensity: 2, color: 0x000000
@@ -132,6 +132,21 @@ export class PorchLight extends THREE.Group {
 		super.traverse(child => {
 			child.castShadow = child.receiveShadow = true;
 		});
+	}
+}
+
+export class Flashlight extends THREE.SpotLight {
+	constructor() {
+		super(0xffffff, 0);
+		this.power = 0; // Default: Off
+		this.angle = Math.PI / 5;
+		this.decay = 2;
+		this.position.setY(-0.4);
+		this.target.position.set(0, -0.4, -2);
+	}
+
+	turn_on_off() {
+		this.power = (this.power > 0) ? 0 : 20;
 	}
 }
 
@@ -187,7 +202,9 @@ class GlassMaterial extends THREE.MeshPhysicalMaterial {
 			normalMap: textureLoader.load('textures/porch-lights/Facade001_1K_NormalGL.png'),
 			roughnessMap: textureLoader.load('textures/porch-lights/Facade001_1K_Roughness.png'),
 			displacementScale: 0,
-			transmission: 1
+			transmission: 1,
+			opacity: 0.8,
+			transparent: true
 		});
 	}
 }
@@ -195,95 +212,91 @@ class GlassMaterial extends THREE.MeshPhysicalMaterial {
 function updateWorldOctree(needsUpdate = false) {
 	if (needsUpdate) {
 		House.doorsOctree = new Octree();
-		House.doors.forEach(door => House.doorsOctree.fromGraphNode(door));
+		for (let door in House.doors) {
+			House.doorsOctree.fromGraphNode(House.doors[door]);
+		}
 	}
 }
 
 export class House {
-	static switches = [];
-	static doors = [];
+	static switches = {};
+	static doors = {};
 	static doorsOctree = new Octree();
 
 	static animate_doors(deltaTime) {
-		House.doors.forEach(door => {
-			door.animate_door(deltaTime);
-		});
+		for (let door in House.doors) {
+			House.doors[door].animate_door(deltaTime);
+		}
 	}
 
 	static check_interactions(intersects) {
 		if (intersects[0].distance < 5) {
-			switch (intersects[0].object.parent.name) {
-			case 'front_door':
-				House.doors[0].check_door();
-				break;
-			case 'living_door':
-				House.doors[1].check_door();
-				break;
-			case 'bedroom_door':
-				House.doors[2].check_door();
-				break;
-			default:
-				switch (intersects[0].object.parent?.parent.name) {
-				case 'switch1':
-					House.switches[0].turn_on_off();
-					break;
-				case 'switch2':
-					House.switches[0].turn_on_off();
-					break;
-				case 'switch3':
-					House.switches[0].turn_on_off();
-					break;
+			let name = intersects[0].object.parent.name;
+			if (name.includes('door')) {
+				House.doors[name].check_door();
+			}
+			else {
+				name = intersects[0].object.parent.parent?.name;
+				if(name?.includes('switch')) {
+					House.switches[name].turn_on_off();
 				}
 			}
 		}
 	}
 
 	static add_ceiling_lights(scene) {
-		const light1 = new CeilingLight();
-		light1.position.set(2.75, 3.3, -2.6);
-		scene.add(light1);
-		const switch1 = new LightSwitch('switch1', light1);
-		switch1.rotateZ(-Math.PI / 2);
-		switch1.position.set(1.22, 2, -1);
-		scene.add(switch1);
-		House.switches.push(switch1);
-		// const light2 = new CeilingLight();
-		// light2.position.set(2.75, 3.3, -2.6);
-		// scene.add(light2);
-		// const switch2 = new LightSwitch('switch1', light2);
-		// switch2.rotateZ(-Math.PI / 2);
-		// switch2.position.set(1.22, 2, -1);
-		// scene.add(switch2);
-		// House.switches.push(switch2);
-		// const light3 = new CeilingLight();
-		// light3.position.set(2.75, 3.3, -2.6);
-		// scene.add(light3);
-		// const switch3 = new LightSwitch('switch1', light3);
-		// switch3.rotateZ(-Math.PI / 2);
-		// switch3.position.set(1.22, 2, -1);
-		// scene.add(switch3);
-		// House.switches.push(switch3);
+		// Hall light
+		const hallLight = new CeilingLight();
+		hallLight.position.set(2.5, 3.3, -2);
+		scene.add(hallLight);
+		const hallSwitch = new LightSwitch('hall_switch', hallLight);
+		hallSwitch.rotateZ(-Math.PI / 2);
+		hallSwitch.position.set(1.22, 2, -1);
+		scene.add(hallSwitch);
+		House.switches['hall_switch'] = hallSwitch;
+		// Living room light
+		const livingLight = new CeilingLight();
+		livingLight.position.set(-1.5, 3.3, -2);
+		scene.add(livingLight);
+		const livingSwitch = new LightSwitch('living_switch', livingLight);
+		livingSwitch.rotateZ(Math.PI / 2);
+		livingSwitch.position.set(0.78, 2, -1);
+		scene.add(livingSwitch);
+		House.switches['living_switch'] = livingSwitch;
+		// Bedroom light
+		const bedroomLight = new CeilingLight();
+		bedroomLight.position.set(-1.5, 3.3, 2);
+		scene.add(bedroomLight);
+		const bedroomSwitch = new LightSwitch('bedroom_switch', bedroomLight);
+		bedroomSwitch.position.set(0.4, 2, 0.22);
+		scene.add(bedroomSwitch);
+		House.switches['bedroom_switch'] = bedroomSwitch;
 	}
 
 	static add_doors(scene) {
+		// Front door
 		const frontDoor = new Door('front_door');
 		frontDoor.castShadow = frontDoor.receiveShadow = true;
 		frontDoor.position.set(3.1, 1.65, 0);
-		House.doors.push(frontDoor);
+		House.doors['front_door'] = frontDoor;
+		scene.add(frontDoor);
+		// Living room door
 		const livingDoor = new Door('living_door');
 		livingDoor.castShadow = frontDoor.castShadow = true;
 		livingDoor.rotateY(Math.PI / 2);
 		livingDoor.position.set(1, 1.65, -2.6);
-		House.doors.push(livingDoor);
+		House.doors['living_door'] = livingDoor;
+		scene.add(livingDoor);
+		// Bedroom door
 		const bedroomDoor = new Door('bedroom_door');
 		bedroomDoor.castShadow = bedroomDoor.receiveShadow = true;
 		bedroomDoor.rotation.y = Math.PI;
 		bedroomDoor.position.set(-1.1, 1.65, 0);
-		House.doors.push(bedroomDoor);
-		House.doors.forEach(door => {
-			scene.add(door);
-			House.doorsOctree.fromGraphNode(door);
-		});
+		House.doors['bedroom_door'] = bedroomDoor;
+		scene.add(bedroomDoor);
+		for (let door in House.doors) {
+			House.doorsOctree.fromGraphNode(House.doors[door]);
+		}
 	}
 
 	static add_floor(scene) {
