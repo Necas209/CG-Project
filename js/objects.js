@@ -9,11 +9,14 @@ class Ellipse extends THREE.Curve {
 		this.yRadius = yRadius;
 	}
 
-	// eslint-disable-next-line no-unused-vars
 	getPoint(t, optionalTarget) {
 		const radians = 2 * Math.PI * t;
 		// noinspection JSValidateTypes
-		return new THREE.Vector3(this.xRadius * Math.cos(radians), this.yRadius * Math.sin(radians), 0);
+		return new THREE.Vector3(
+			this.xRadius * Math.cos(radians),
+			this.yRadius * Math.sin(radians),
+			0
+		);
 	}
 }
 
