@@ -141,12 +141,63 @@ export class Flashlight extends THREE.SpotLight {
 		this.power = 0; // Default: Off
 		this.angle = Math.PI / 5;
 		this.decay = 2;
-		this.position.setY(-0.4);
-		this.target.position.set(0, -0.4, -2);
 	}
 
 	turn_on_off() {
 		this.power = (this.power > 0) ? 0 : 20;
+	}
+}
+
+export class NPC extends THREE.Group {
+	constructor() {
+		super();
+		const material = new THREE.MeshBasicMaterial({
+			color: 'white'
+		});
+		const edgesMaterial = new THREE.LineBasicMaterial({
+			color: 0x3B3C36,
+			linewidth: 2
+		});
+		const torsoGeometry = new THREE.CylinderGeometry(0.15, 0.15, 0.6);
+		const torsoMesh = new THREE.Mesh(torsoGeometry, material);
+		let geometry = new THREE.EdgesGeometry(torsoMesh.geometry);
+		let edges = new THREE.LineSegments(geometry, edgesMaterial);
+		torsoMesh.add(edges);
+		this.add(torsoMesh);
+		const headGeometry = new THREE.SphereGeometry(0.15);
+		const headMesh = new THREE.Mesh(headGeometry, material);
+		// geometry = new THREE.EdgesGeometry(headMesh.geometry);
+		// edges = new THREE.LineSegments(geometry, edgesMaterial);
+		// headMesh.add(edges);
+		headMesh.position.setY(0.45);
+		this.add(headMesh);
+		const armGeometry = new THREE.CylinderGeometry(0.07, 0.07, 0.7);
+		const armMesh = new THREE.Mesh(armGeometry, material);
+		geometry = new THREE.EdgesGeometry(armMesh.geometry);
+		edges = new THREE.LineSegments(geometry, edgesMaterial);
+		armMesh.add(edges);
+		const leftArmMesh = armMesh.clone();
+		leftArmMesh.rotateZ(-Math.PI / 7);
+		leftArmMesh.position.set(-0.2, -0.05, 0);
+		this.add(leftArmMesh);
+		const rightArmMesh = armMesh.clone();
+		rightArmMesh.rotateZ(Math.PI / 7);
+		rightArmMesh.position.set(0.2, -0.05, 0);
+		rightArmMesh.add(edges);
+		this.add(rightArmMesh);
+		const legGeometry = new THREE.CylinderGeometry(0.07, 0.07, 0.7);
+		const legMesh = new THREE.Mesh(legGeometry, material);
+		geometry = new THREE.EdgesGeometry(legMesh.geometry);
+		edges = new THREE.LineSegments(geometry, edgesMaterial);
+		legMesh.add(edges);
+		const leftLegMesh = legMesh.clone();
+		leftLegMesh.rotateZ(-Math.PI / 9);
+		leftLegMesh.position.set(-0.15, -0.6, 0);
+		this.add(leftLegMesh);
+		const rightLegMesh = legMesh.clone();
+		rightLegMesh.rotateZ(Math.PI / 9);
+		rightLegMesh.position.set(0.15, -0.6, 0);
+		this.add(rightLegMesh);
 	}
 }
 

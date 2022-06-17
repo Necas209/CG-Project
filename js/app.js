@@ -3,7 +3,7 @@ import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockContro
 import {Octree} from 'three/examples/jsm/math/Octree';
 import {Capsule} from 'three/examples/jsm/math/Capsule';
 import {World} from 'World';
-import {Flashlight, House} from 'objects';
+import {Flashlight, House, NPC} from 'objects';
 
 function main() {
 	// Clock and scene
@@ -23,7 +23,6 @@ function main() {
 	const playerVelocity = new THREE.Vector3();
 	const playerDirection = new THREE.Vector3();
 	let playerOnFloor = false;
-	// Cameras set-up
 	// 0 -> Perspective Camera
 	// 1 -> Orthographic Camera
 	let cameraType = 0;
@@ -45,11 +44,16 @@ function main() {
 		-100,
 		1000
 	);
-	orthographicCamera.position.set(3, 3, 2);
-	orthographicCamera.lookAt(scene.position);
+	orthographicCamera.zoom = 2;
 	cameras.push(orthographicCamera);
+	// Add NPC
+	const npc = new NPC();
+	npc.position.set(0, -0.5, 0.5);
+	perspectiveCamera.add(npc);
 	// Add flashlight
 	const flashlight = new Flashlight();
+	flashlight.position.setY(-0.4);
+	flashlight.target.position.set(0, -0.4, -2);
 	perspectiveCamera.add(flashlight);
 	perspectiveCamera.add(flashlight.target);
 	scene.add(perspectiveCamera);
@@ -80,6 +84,7 @@ function main() {
 		}
 		// Check player interactions with scene
 		if (event.code === 'KeyE') {
+			console.log(intersects);
 			House.check_interactions(intersects);
 		}
 		// Switch cameras
@@ -116,6 +121,9 @@ function main() {
 		playerCollider.translate(deltaPosition);
 		playerCollisions();
 		perspectiveCamera.position.copy(playerCollider.end);
+		const pos = playerCollider.end;
+		orthographicCamera.position.set(pos.x + 1, pos.y, pos.z + 2);
+		orthographicCamera.lookAt(playerCollider.start);
 	}
 
 	function getForwardVector() {
@@ -206,6 +214,7 @@ function main() {
 			-(event.clientY / window.innerHeight) * 2 + 1
 		);
 	});
+	const objs = [...scene.children].splice(1);
 
 	// render function
 	function render() {
@@ -217,7 +226,7 @@ function main() {
 			// update the picking ray with the camera and pointer position
 			raycaster.setFromCamera(mouse, perspectiveCamera);
 			// calculate objects intersecting the picking ray
-			intersects = raycaster.intersectObjects(scene.children);
+			intersects = raycaster.intersectObjects(objs);
 			House.animate_doors(deltaTime);
 		}
 		renderer.render(scene, cameras[cameraType]);
