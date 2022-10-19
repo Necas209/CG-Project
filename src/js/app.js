@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockControls';
-import {Octree} from 'three/examples/jsm/math/Octree';
-import {Capsule} from 'three/examples/jsm/math/Capsule';
-import {World} from 'World';
-import {Flashlight, House, NPC} from 'objects';
+import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
+import { Octree } from 'three/examples/jsm/math/Octree';
+import { Capsule } from 'three/examples/jsm/math/Capsule';
+import { World } from 'World';
+import { Flashlight, House, NPC } from 'objects';
 
 function main() {
 	// Clock and scene

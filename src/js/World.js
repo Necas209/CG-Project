@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
-import {House, PicketFence, PorchLight} from 'objects';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { House, PicketFence, PorchLight } from 'objects';
 
 export class World {
 	static add_ground(scene) {

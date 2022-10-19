@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import {Octree} from 'three/examples/jsm/math/Octree';
-import {CSG} from 'three-csg-ts';
-import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
+import { Octree } from 'three/examples/jsm/math/Octree';
+import { CSG } from 'three-csg-ts';
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 class Ellipse extends THREE.Curve {
 	constructor(xRadius, yRadius) {
@@ -45,8 +45,8 @@ export class PicketFence extends THREE.Mesh {
 		shape.lineTo(-0.5, 0.9);
 		shape.lineTo(0, 0.9);
 		// Fence geometry and material
-		const fenceGeometry = new THREE.ExtrudeGeometry(shape, {depth: 0});
-		super(fenceGeometry, new WoodMaterial());
+		const fenceGeometry = new THREE.ExtrudeGeometry(shape, { depth: 0 });
+		super(fenceGeometry, woodMaterial);
 		super.castShadow = super.receiveShadow = true;
 	}
 }
@@ -54,15 +54,6 @@ export class PicketFence extends THREE.Mesh {
 export class PorchLight extends THREE.Group {
 	constructor() {
 		super();
-		const textureLoader = new THREE.TextureLoader();
-		const metalMaterial = new THREE.MeshStandardMaterial({
-			map: textureLoader.load('textures/porch-lights/Metal021_1K_Color.png'),
-			displacementMap: textureLoader.load('textures/porch-lights/Metal021_1K_Displacement.png'),
-			metalnessMap: textureLoader.load('textures/porch-lights/Metal021_1K_Metalness.png'),
-			normalMap: textureLoader.load('textures/porch-lights/Metal021_1K_NormalGL.png'),
-			roughnessMap: textureLoader.load('textures/porch-lights/Metal021_1K_Roughness.png'),
-			displacementScale: 0
-		});
 		// Base
 		const baseGeometry = new THREE.BoxGeometry(0.2, 0.05, 0.2);
 		const baseMesh = new THREE.Mesh(baseGeometry, metalMaterial);
@@ -79,7 +70,7 @@ export class PorchLight extends THREE.Group {
 		const glassGeometry = new THREE.BoxGeometry(0.01, 0.3, 0.16);
 		const glassPos = [[-0.09, 0], [0, -0.09], [0.09, 0], [0, 0.09]];
 		glassPos.forEach((pos, i) => {
-			const glassMesh = new THREE.Mesh(glassGeometry, new GlassMaterial());
+			const glassMesh = new THREE.Mesh(glassGeometry, glassMaterial);
 			glassMesh.position.set(pos[0], 0.175, pos[1]);
 			glassMesh.rotateY(Math.PI / 2 * i);
 			super.add(glassMesh);
@@ -117,7 +108,7 @@ export class PorchLight extends THREE.Group {
 		super.add(chain);
 		// Candle
 		const candleGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.2);
-		const candleMaterial = new THREE.MeshStandardMaterial({color: 0xfffff0});
+		const candleMaterial = new THREE.MeshStandardMaterial({ color: 0xfffff0 });
 		const candleMesh = new THREE.Mesh(candleGeometry, candleMaterial);
 		candleMesh.position.set(0, 0.125, 0);
 		super.add(candleMesh);
@@ -205,64 +196,56 @@ export class NPC extends THREE.Group {
 	}
 }
 
-class WoodMaterial extends THREE.MeshStandardMaterial {
-	constructor() {
-		const textureLoader = new THREE.TextureLoader();
-		const colorMap = textureLoader.load('textures/fence/Wood033_1K_Color.png', (texture) => {
-			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-			texture.repeat.set(0.6, 0.6);
-		});
-		const normalMap = textureLoader.load('textures/fence/Wood033_1K_NormalGL.png', (texture) => {
-			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-			texture.repeat.set(0.6, 0.6);
-		});
-		super({
-			map: colorMap,
-			aoMap: textureLoader.load('textures/fence/Wood033_1K_AmbientOcclusion.png'),
-			normalMap: normalMap,
-			roughnessMap: textureLoader.load('textures/fence/Wood033_1K_Roughness.png'),
-			displacementMap: textureLoader.load('textures/fence/Wood033_1K_Displacement.png'),
-			displacementScale: 0
-		});
-	}
-}
+const textureLoader = new THREE.TextureLoader();
 
-class WallMaterial extends THREE.MeshStandardMaterial {
-	constructor() {
-		const textureLoader = new THREE.TextureLoader();
-		const map = textureLoader.load('textures/wall/WoodSiding001_1K_Color.png', (texture) => {
-			texture.wrapT = texture.wrapS = THREE.RepeatWrapping;
-		});
-		const normalMap = textureLoader.load('textures/wall/WoodSiding001_1K_NormalGL.png', (texture) => {
-			texture.wrapT = texture.wrapS = THREE.RepeatWrapping;
-		});
-		super({
-			map: map,
-			aoMap: textureLoader.load('textures/wall/WoodSiding001_1K_AmbientOcclusion.png'),
-			displacementMap: textureLoader.load('textures/wall/WoodSiding001_1K_Displacement.png'),
-			normalMap: normalMap,
-			roughnessMap: textureLoader.load('textures/wall/WoodSiding001_1K_Roughness.png'),
-			displacementScale: 0
-		});
-	}
-}
+const woodMaterial = new THREE.MeshStandardMaterial({
+	map: textureLoader.load('textures/fence/Wood033_1K_Color.png', (texture) => {
+		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set(0.6, 0.6);
+	}),
+	aoMap: textureLoader.load('textures/fence/Wood033_1K_AmbientOcclusion.png'),
+	normalMap: textureLoader.load('textures/fence/Wood033_1K_NormalGL.png', (texture) => {
+		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set(0.6, 0.6);
+	}),
+	roughnessMap: textureLoader.load('textures/fence/Wood033_1K_Roughness.png'),
+	displacementMap: textureLoader.load('textures/fence/Wood033_1K_Displacement.png'),
+	displacementScale: 0
+});
 
-class GlassMaterial extends THREE.MeshPhysicalMaterial {
-	constructor() {
-		const textureLoader = new THREE.TextureLoader();
-		super({
-			map: textureLoader.load('textures/porch-lights/Facade001_1K_Color.png'),
-			displacementMap: textureLoader.load('textures/porch-lights/Facade001_1K_Displacement.png'),
-			metalnessMap: textureLoader.load('textures/porch-lights/Facade001_1K_Metalness.png'),
-			normalMap: textureLoader.load('textures/porch-lights/Facade001_1K_NormalGL.png'),
-			roughnessMap: textureLoader.load('textures/porch-lights/Facade001_1K_Roughness.png'),
-			displacementScale: 0,
-			transmission: 1,
-			opacity: 0.8,
-			transparent: true
-		});
-	}
-}
+const wallMaterial = new THREE.MeshStandardMaterial({
+	map: textureLoader.load('textures/wall/WoodSiding001_1K_Color.png', (texture) => {
+		texture.wrapT = texture.wrapS = THREE.RepeatWrapping;
+	}),
+	aoMap: textureLoader.load('textures/wall/WoodSiding001_1K_AmbientOcclusion.png'),
+	displacementMap: textureLoader.load('textures/wall/WoodSiding001_1K_Displacement.png'),
+	normalMap: textureLoader.load('textures/wall/WoodSiding001_1K_NormalGL.png', (texture) => {
+		texture.wrapT = texture.wrapS = THREE.RepeatWrapping;
+	}),
+	roughnessMap: textureLoader.load('textures/wall/WoodSiding001_1K_Roughness.png'),
+	displacementScale: 0
+});
+
+const glassMaterial = new THREE.MeshPhysicalMaterial({
+	map: textureLoader.load('textures/porch-lights/Facade001_1K_Color.png'),
+	displacementMap: textureLoader.load('textures/porch-lights/Facade001_1K_Displacement.png'),
+	metalnessMap: textureLoader.load('textures/porch-lights/Facade001_1K_Metalness.png'),
+	normalMap: textureLoader.load('textures/porch-lights/Facade001_1K_NormalGL.png'),
+	roughnessMap: textureLoader.load('textures/porch-lights/Facade001_1K_Roughness.png'),
+	displacementScale: 0,
+	transmission: 1,
+	opacity: 0.8,
+	transparent: true
+});
+
+const metalMaterial = new THREE.MeshStandardMaterial({
+	map: textureLoader.load('textures/porch-lights/Metal021_1K_Color.png'),
+	displacementMap: textureLoader.load('textures/porch-lights/Metal021_1K_Displacement.png'),
+	metalnessMap: textureLoader.load('textures/porch-lights/Metal021_1K_Metalness.png'),
+	normalMap: textureLoader.load('textures/porch-lights/Metal021_1K_NormalGL.png'),
+	roughnessMap: textureLoader.load('textures/porch-lights/Metal021_1K_Roughness.png'),
+	displacementScale: 0
+});
 
 function updateWorldOctree(needsUpdate = false) {
 	if (needsUpdate) {
@@ -375,7 +358,7 @@ export class House {
 		shape.lineTo(8, 4);
 		shape.lineTo(8, 8);
 		shape.lineTo(0, 8);
-		const geometry = new THREE.ExtrudeGeometry(shape, {depth: 0.0001});
+		const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.0001 });
 		const floor = new THREE.Mesh(geometry, material);
 		floor.castShadow = floor.receiveShadow = true;
 		floor.rotateX(-Math.PI / 2);
@@ -388,8 +371,8 @@ export class House {
 		shape.lineTo(8, 0);
 		shape.lineTo(8, 8);
 		shape.lineTo(0, 8);
-		const geometry = new THREE.ExtrudeGeometry(shape, {depth: 0.0001});
-		const ceiling = new THREE.Mesh(geometry, new WallMaterial());
+		const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.0001 });
+		const ceiling = new THREE.Mesh(geometry, wallMaterial);
 		ceiling.castShadow = ceiling.receiveShadow = true;
 		ceiling.rotateX(-Math.PI / 2);
 		ceiling.position.set(-4, 3.7, 4);
@@ -438,8 +421,8 @@ export class House {
 		rightWindowPath.lineTo(7, 2);
 		rightWindowPath.lineTo(5.5, 2);
 		wallShape.holes.push(rightWindowPath);
-		const wallGeometry = new THREE.ExtrudeGeometry(wallShape, {depth: 0.01});
-		const wallMesh = new THREE.Mesh(wallGeometry, new WallMaterial());
+		const wallGeometry = new THREE.ExtrudeGeometry(wallShape, { depth: 0.01 });
+		const wallMesh = new THREE.Mesh(wallGeometry, wallMaterial);
 		wallMesh.castShadow = wallMesh.receiveShadow = true;
 		wallMesh.rotateY(Math.PI / 2);
 		wallMesh.position.set(-4, 0.5, 4);
@@ -467,8 +450,8 @@ export class House {
 		windowPath.lineTo(3, 2);
 		windowPath.lineTo(1.5, 2);
 		shape.holes.push(windowPath);
-		const geometry = new THREE.ExtrudeGeometry(shape, {depth: 0.01});
-		const wall = new THREE.Mesh(geometry, new WallMaterial());
+		const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.01 });
+		const wall = new THREE.Mesh(geometry, wallMaterial);
 		wall.castShadow = wall.receiveShadow = true;
 		wall.rotateY(Math.PI / 2);
 		wall.position.set(4, 0.5, 0);
@@ -491,8 +474,8 @@ export class House {
 		doorPath.lineTo(2.1, 2.3);
 		doorPath.lineTo(0.9, 2.3);
 		shape.holes.push(doorPath);
-		const wallGeometry = new THREE.ExtrudeGeometry(shape, {depth: 0.01});
-		const wall = new THREE.Mesh(wallGeometry, new WallMaterial());
+		const wallGeometry = new THREE.ExtrudeGeometry(shape, { depth: 0.01 });
+		const wall = new THREE.Mesh(wallGeometry, wallMaterial);
 		wall.castShadow = wall.receiveShadow = true;
 		wall.position.set(1, 0.5, 0);
 		scene.add(wall);
@@ -505,8 +488,8 @@ export class House {
 		wallShape.lineTo(4, 3);
 		wallShape.lineTo(0, 3);
 		wallShape.moveTo(0, 0);
-		const wallGeometry = new THREE.ExtrudeGeometry(wallShape, {depth: 0.01});
-		const wall = new THREE.Mesh(wallGeometry, new WallMaterial());
+		const wallGeometry = new THREE.ExtrudeGeometry(wallShape, { depth: 0.01 });
+		const wall = new THREE.Mesh(wallGeometry, wallMaterial);
 		wall.castShadow = wall.receiveShadow = true;
 		wall.rotateY(Math.PI / 2);
 		wall.position.set(1, 0.5, 4);
@@ -524,8 +507,8 @@ export class House {
 		path.lineTo(3.25, 2);
 		path.lineTo(1.75, 2);
 		shape.holes.push(path);
-		const geometry = new THREE.ExtrudeGeometry(shape, {depth: 0.01});
-		const wallMesh = new THREE.Mesh(geometry, new WallMaterial());
+		const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.01 });
+		const wallMesh = new THREE.Mesh(geometry, wallMaterial);
 		wallMesh.castShadow = wallMesh.receiveShadow = true;
 		wallMesh.position.set(-4, 0.5, 4);
 		scene.add(wallMesh);
@@ -536,8 +519,8 @@ export class House {
 		const doorStepShape = new THREE.Shape();
 		doorStepShape.lineTo(0.8, 0);
 		doorStepShape.lineTo(0, 0.04);
-		const doorStepGeometry = new THREE.ExtrudeGeometry(doorStepShape, {depth: 0.5});
-		const doorstep = new THREE.Mesh(doorStepGeometry, new WallMaterial());
+		const doorStepGeometry = new THREE.ExtrudeGeometry(doorStepShape, { depth: 0.5 });
+		const doorstep = new THREE.Mesh(doorStepGeometry, wallMaterial);
 		doorstep.castShadow = doorstep.receiveShadow = true;
 		doorstep.rotateY(-Math.PI / 2);
 		doorstep.position.set(2.75, 0.4, 0.2);
@@ -563,8 +546,8 @@ export class House {
 		rightWindowPath.lineTo(7, 2);
 		rightWindowPath.lineTo(6, 2);
 		shape.holes.push(rightWindowPath);
-		const geometry = new THREE.ExtrudeGeometry(shape, {depth: 0.01});
-		const wall = new THREE.Mesh(geometry, new WallMaterial());
+		const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.01 });
+		const wall = new THREE.Mesh(geometry, wallMaterial);
 		wall.castShadow = wall.receiveShadow = true;
 		wall.position.set(-4, 0.5, -4);
 		scene.add(wall);
@@ -589,8 +572,8 @@ export class House {
 		path.lineTo(4.1, 2.3);
 		path.lineTo(2.9, 2.3);
 		shape.holes.push(path);
-		const geometry = new THREE.ExtrudeGeometry(shape, {depth: 0.01});
-		const wall = new THREE.Mesh(geometry, new WallMaterial());
+		const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.01 });
+		const wall = new THREE.Mesh(geometry, wallMaterial);
 		wall.castShadow = wall.receiveShadow = true;
 		wall.position.set(-4, 0.5, 0);
 		scene.add(wall);
@@ -607,8 +590,8 @@ export class House {
 		path.lineTo(2.6, 2.3);
 		path.lineTo(1.4, 2.3);
 		shape.holes.push(path);
-		const geometry = new THREE.ExtrudeGeometry(shape, {depth: 0.01});
-		const wall = new THREE.Mesh(geometry, new WallMaterial());
+		const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.01 });
+		const wall = new THREE.Mesh(geometry, wallMaterial);
 		wall.castShadow = wall.receiveShadow = true;
 		wall.rotateY(Math.PI / 2);
 		wall.position.set(1, 0.5, 0);
@@ -620,8 +603,8 @@ export class House {
 		shape.lineTo(0.4, 0);
 		shape.lineTo(0.4, 3);
 		shape.lineTo(0, 3);
-		const geometry = new THREE.ExtrudeGeometry(shape, {depth: 0.01});
-		const pillar = new THREE.Mesh(geometry, new WallMaterial());
+		const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.01 });
+		const pillar = new THREE.Mesh(geometry, wallMaterial);
 		pillar.castShadow = pillar.receiveShadow = true;
 		pillar.rotateY(Math.PI / 2);
 		pillar.position.set(3.8, 0.5, 4);
@@ -638,7 +621,7 @@ export class House {
 					child.castShadow = child.receiveShadow = true;
 				}
 			});
-			table.position.set(-2,0.55, -2);
+			table.position.set(-2, 0.55, -2);
 			scene.add(table);
 			worldOctree.fromGraphNode(table);
 		});
@@ -650,7 +633,7 @@ export class House {
 					child.castShadow = child.receiveShadow = true;
 				}
 			});
-			carpet.position.set(-2,0.5, -2);
+			carpet.position.set(-2, 0.5, -2);
 			scene.add(carpet);
 			worldOctree.fromGraphNode(carpet);
 		});
@@ -662,7 +645,7 @@ export class House {
 					child.castShadow = child.receiveShadow = true;
 				}
 			});
-			bed.position.set(-2.7,0.55, 2);
+			bed.position.set(-2.7, 0.55, 2);
 			scene.add(bed);
 			worldOctree.fromGraphNode(bed);
 		});
@@ -674,7 +657,7 @@ export class House {
 					child.castShadow = child.receiveShadow = true;
 				}
 			});
-			wardrobe.position.set(-0.6,0.6, 2);
+			wardrobe.position.set(-0.6, 0.6, 2);
 			scene.add(wardrobe);
 			worldOctree.fromGraphNode(wardrobe);
 		});
@@ -686,13 +669,13 @@ class LightSwitch extends THREE.Group {
 		super();
 		this.name = name;
 		this.ceilingLight = ceilingLight;
-		const switchMaterial = new THREE.MeshStandardMaterial({color: 'white'});
+		const switchMaterial = new THREE.MeshStandardMaterial({ color: 'white' });
 		const borderGeometry = new THREE.CylinderGeometry(0.09, 0.1, 0.01, 4);
 		const borderMesh = new THREE.Mesh(borderGeometry, switchMaterial);
 		borderMesh.rotateY(Math.PI / 4);
 		// Add edges
 		let geometry = new THREE.EdgesGeometry(borderMesh.geometry);
-		let material = new THREE.LineBasicMaterial({color: 0x3B3C36, linewidth: 2});
+		let material = new THREE.LineBasicMaterial({ color: 0x3B3C36, linewidth: 2 });
 		let edges = new THREE.LineSegments(geometry, material);
 		borderMesh.add(edges);
 		this.add(borderMesh);
@@ -701,7 +684,7 @@ class LightSwitch extends THREE.Group {
 		switchMesh.rotateX(-Math.PI / 4);
 		// Add edges
 		geometry = new THREE.EdgesGeometry(switchMesh.geometry);
-		material = new THREE.LineBasicMaterial({color: 0x3B3C36, linewidth: 2});
+		material = new THREE.LineBasicMaterial({ color: 0x3B3C36, linewidth: 2 });
 		edges = new THREE.LineSegments(geometry, material);
 		switchMesh.add(edges);
 		this.switch = switchMesh;
@@ -752,13 +735,13 @@ class Window extends THREE.Group {
 	constructor(width = 1.5, height = 1) {
 		super();
 		const thickness = 0.2;
-		const vertMesh = new THREE.Mesh(new THREE.BoxGeometry(thickness, height, 0.1), new WallMaterial());
+		const vertMesh = new THREE.Mesh(new THREE.BoxGeometry(thickness, height, 0.1), wallMaterial);
 		super.add(vertMesh);
 		const dimensions = [-(width + thickness) / 4, (width + thickness) / 4];
 		dimensions.forEach(x => {
 			const horizMesh = new THREE.Mesh(
 				new THREE.BoxGeometry((width - thickness) / 2, thickness, 0.1),
-				new WallMaterial()
+				wallMaterial
 			);
 			horizMesh.position.setX(x);
 			super.add(horizMesh);
@@ -775,7 +758,7 @@ class Window extends THREE.Group {
 			[0, (height + thickness) / 2]
 		];
 		glassPos.forEach(xy => {
-			const glassMesh = new THREE.Mesh(glassGeometry, new GlassMaterial());
+			const glassMesh = new THREE.Mesh(glassGeometry, glassMaterial);
 			glassMesh.position.set(xy[0] - (width + thickness) / 4, xy[1] - (height + thickness) / 4, 0);
 			super.add(glassMesh);
 		});
@@ -789,9 +772,9 @@ class Door extends THREE.Object3D {
 		this.isOpening = false;
 		this.isClosing = false;
 		const geometry = new THREE.BoxGeometry(1, 2.1, 0.1);
-		const door = new THREE.Mesh(geometry, new WoodMaterial());
+		const door = new THREE.Mesh(geometry, woodMaterial);
 		const geometry2 = new THREE.SphereGeometry(0.05);
-		const handle = new THREE.Mesh(geometry2, new WallMaterial());
+		const handle = new THREE.Mesh(geometry2, wallMaterial);
 		handle.position.set(-0.4, 0.1, 0.1);
 		door.add(handle);
 		const handle2 = handle.clone();
