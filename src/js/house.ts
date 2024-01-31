@@ -25,10 +25,13 @@ export class House {
 
     check_interactions(intersects: THREE.Intersection<THREE.Object3D>[]) {
         if (intersects.length === 0) return;
-        if (intersects[0].distance < 5) {
-            console.log(intersects[0]);
-            let name = intersects[0]?.object?.parent?.name;
-            if (!name) return;
+        if (intersects[0].distance < 2) {
+            const parent = intersects[0]?.object?.parent;
+            let name = parent?.name;
+            if (!name || !this.interactables.has(name)) {
+                name = parent?.parent?.name;
+                if (!name) return;
+            }
             const interactable = this.interactables.get(name);
             if (interactable) {
                 interactable.interact();
@@ -65,7 +68,7 @@ export class HouseBuilder {
         this.scene.add(hallLight);
         const hallSwitch = new LightSwitch('hall_switch', hallLight);
         hallSwitch.rotateZ(-Math.PI / 2);
-        hallSwitch.position.set(1.22, 2, -1);
+        hallSwitch.position.set(1.22, 2.25, -1);
 
         // Living room light
         const livingRoomLight = new CeilingLight();
@@ -73,14 +76,14 @@ export class HouseBuilder {
         this.scene.add(livingRoomLight);
         const livingSwitch = new LightSwitch('living_switch', livingRoomLight);
         livingSwitch.rotateZ(Math.PI / 2);
-        livingSwitch.position.set(0.78, 2, -1);
+        livingSwitch.position.set(0.78, 2.25, -1);
 
         // Bedroom light
         const bedroomLight = new CeilingLight();
         bedroomLight.position.set(-1.5, 3.3, 2);
         this.scene.add(bedroomLight);
         const bedroomSwitch = new LightSwitch('bedroom_switch', bedroomLight);
-        bedroomSwitch.position.set(0.4, 2, 0.22);
+        bedroomSwitch.position.set(0.4, 2.25, 0.22);
 
         this.switches = [hallSwitch, livingSwitch, bedroomSwitch];
         for (let lightSwitch of this.switches) {
@@ -90,19 +93,20 @@ export class HouseBuilder {
     }
 
     withDoors() {
+        const updateWorldOctree = this.house.updateWorldOctree.bind(this.house);
         // Front door
-        const frontDoor = new Door('front_door', this.house.updateWorldOctree);
+        const frontDoor = new Door('front_door', updateWorldOctree);
         frontDoor.castShadow = frontDoor.receiveShadow = true;
         frontDoor.position.set(3.1, 1.65, 0);
 
         // Living room door
-        const livingDoor = new Door('living_door', this.house.updateWorldOctree);
+        const livingDoor = new Door('living_door', updateWorldOctree);
         livingDoor.castShadow = frontDoor.castShadow = true;
         livingDoor.rotateY(Math.PI / 2);
         livingDoor.position.set(1, 1.65, -2.6);
 
         // Bedroom door
-        const bedroomDoor = new Door('bedroom_door', this.house.updateWorldOctree);
+        const bedroomDoor = new Door('bedroom_door', updateWorldOctree);
         bedroomDoor.castShadow = bedroomDoor.receiveShadow = true;
         bedroomDoor.rotation.y = Math.PI;
         bedroomDoor.position.set(-1.1, 1.65, 0);

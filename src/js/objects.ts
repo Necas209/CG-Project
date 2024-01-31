@@ -268,6 +268,8 @@ export class LightSwitch extends THREE.Group implements Interactable {
  */
 export class CeilingLight extends THREE.Group {
     light: THREE.PointLight;
+    static power: number = 100;
+
     constructor() {
         super();
         const outerLampGeometry = new THREE.CylinderGeometry(0.06, 0.16, 0.2);
@@ -280,7 +282,7 @@ export class CeilingLight extends THREE.Group {
         const lampMesh = CSG.subtract(outerLampMesh, innerLampMesh);
         this.add(lampMesh);
         // Flame
-        const light = new THREE.PointLight(0xfad16b, 1, 100, 2);
+        const light = new THREE.PointLight(0xfad16b, 1, CeilingLight.power, 2);
         light.power = 0;
         const bulbGeometry = new THREE.SphereGeometry(0.05);
         const bulbMaterial = new THREE.MeshStandardMaterial({
@@ -293,7 +295,7 @@ export class CeilingLight extends THREE.Group {
     }
 
     on_off_light() {
-        this.light.power = this.light.power === 0 ? 150 : 0;
+        this.light.power = CeilingLight.power - this.light.power;
     }
 }
 
