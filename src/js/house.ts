@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { GLTFLoader, Octree } from "three-stdlib";
-import type { Interactable } from "./js/objects";
-import { CeilingLight, Door, GlassWindow, LightSwitch } from "./js/objects";
-import * as Materials from "./js/materials";
+import type { Interactable } from "./objects";
+import { CeilingLight, Door, GlassWindow, LightSwitch } from "./objects";
+import * as Materials from "./materials";
 
 export class House {
     doors: Map<string, Door> = new Map();
@@ -117,18 +117,18 @@ export class HouseBuilder {
 
     withFloor() {
         const textureLoader = new THREE.TextureLoader();
-        const map = textureLoader.load('assets/textures/floor/Wood062_1K_Color.png', (texture) => {
+        const map = textureLoader.load('../assets/textures/floor/Wood062_1K_Color.png', (texture) => {
             texture.wrapT = texture.wrapS = THREE.RepeatWrapping;
         });
-        const normalMap = textureLoader.load('assets/textures/floor/Wood062_1K_NormalGL.png', (texture) => {
+        const normalMap = textureLoader.load('../assets/textures/floor/Wood062_1K_NormalGL.png', (texture) => {
             texture.wrapT = texture.wrapS = THREE.RepeatWrapping;
         });
         const material = new THREE.MeshStandardMaterial({
             map: map,
-            aoMap: textureLoader.load('assets/textures/floor/Wood062_1K_AmbientOcclusion.png'),
-            displacementMap: textureLoader.load('assets/textures/floor/Wood062_1K_Displacement.png'),
+            aoMap: textureLoader.load('../assets/textures/floor/Wood062_1K_AmbientOcclusion.png'),
+            displacementMap: textureLoader.load('../assets/textures/floor/Wood062_1K_Displacement.png'),
             normalMap: normalMap,
-            roughnessMap: textureLoader.load('assets/textures/floor/Wood062_1K_Roughness.png'),
+            roughnessMap: textureLoader.load('../assets/textures/floor/Wood062_1K_Roughness.png'),
             displacementScale: 0
         });
         const shape = new THREE.Shape();
@@ -162,19 +162,19 @@ export class HouseBuilder {
 
     withRoof() {
         const textureLoader = new THREE.TextureLoader();
-        const map = textureLoader.load('assets/textures/roof/RoofingTiles009_1K_Color.png', (texture) => {
+        const map = textureLoader.load('../assets/textures/roof/RoofingTiles009_1K_Color.png', (texture) => {
             texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
             texture.repeat.set(8, 5);
         });
-        const normalMap = textureLoader.load('assets/textures/roof/RoofingTiles009_1K_NormalGL.png', (texture) => {
+        const normalMap = textureLoader.load('../assets/textures/roof/RoofingTiles009_1K_NormalGL.png', (texture) => {
             texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
             texture.repeat.set(8, 5);
         });
         const material = new THREE.MeshStandardMaterial({
             map: map,
-            displacementMap: textureLoader.load('assets/textures/roof/RoofingTiles009_1K_Displacement.png'),
+            displacementMap: textureLoader.load('../assets/textures/roof/RoofingTiles009_1K_Displacement.png'),
             normalMap: normalMap,
-            roughnessMap: textureLoader.load('assets/textures/roof/RoofingTiles009_1K_Roughness.png'),
+            roughnessMap: textureLoader.load('../assets/textures/roof/RoofingTiles009_1K_Roughness.png'),
             displacementScale: 0
         });
         const geometry = new THREE.ConeGeometry(4 * Math.sqrt(2), 3, 4);
@@ -417,7 +417,7 @@ export class HouseBuilder {
 
     withFurniture() {
         const loader = new GLTFLoader();
-        loader.load('assets/objects/table_chairs/scene.gltf', gltf => {
+        loader.load('../assets/objects/table_chairs/scene.gltf', gltf => {
             const table = gltf.scene;
             table.scale.set(0.012, 0.012, 0.012);
             table.traverse(child => {
@@ -429,7 +429,7 @@ export class HouseBuilder {
             this.scene.add(table);
             this.worldOctree.fromGraphNode(table);
         });
-        loader.load('assets/objects/carpet/scene.gltf', gltf => {
+        loader.load('../assets/objects/carpet/scene.gltf', gltf => {
             const carpet = gltf.scene;
             carpet.scale.set(2, 2, 2);
             carpet.traverse(child => {
@@ -441,7 +441,7 @@ export class HouseBuilder {
             this.scene.add(carpet);
             this.worldOctree.fromGraphNode(carpet);
         });
-        loader.load('assets/objects/bed/scene.gltf', gltf => {
+        loader.load('../assets/objects/bed/scene.gltf', gltf => {
             const bed = gltf.scene;
             bed.rotateY(Math.PI / 2);
             bed.traverse(child => {
@@ -453,7 +453,7 @@ export class HouseBuilder {
             this.scene.add(bed);
             this.worldOctree.fromGraphNode(bed);
         });
-        loader.load('assets/objects/wardrobe/scene.gltf', gltf => {
+        loader.load('../assets/objects/wardrobe/scene.gltf', gltf => {
             const wardrobe = gltf.scene;
             wardrobe.rotateY(-Math.PI / 2);
             wardrobe.traverse(child => {

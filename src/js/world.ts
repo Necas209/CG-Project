@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { PointerLockControls, GLTFLoader, Octree, Capsule } from "three-stdlib";
-import { Flashlight, NPC, PicketFence, PorchLight } from "./assets/objects";
-import type { House } from "../house";
-import { HouseBuilder } from "../house";
+import { Flashlight, NPC, PicketFence, PorchLight } from "./objects";
+import type { House } from "./house";
+import { HouseBuilder } from "./house";
 
 export class World {
     static GRAVITY = -9.81;
@@ -35,7 +35,7 @@ export class World {
     flashlight: Flashlight = new Flashlight();
     renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer();
     keyStates: Set<string> = new Set();
-    intersects: any;
+    intersects: THREE.Intersection[] = [];
 
     constructor(house: House, scene: THREE.Scene, octree: Octree) {
         this.house = house;
@@ -110,7 +110,7 @@ export class World {
             this.teleportPlayerIfOob();
             // update the picking ray with the camera and pointer position
             this.raycaster.setFromCamera(this.mouse, this.perspectiveCamera);
-            this.intersects = this.raycaster.intersectassets/objects([...this.house.interactables.values()], true);
+            this.intersects = this.raycaster.intersectObjects([...this.house.interactables.values()], true);
             this.house.animate_doors(deltaTime);
         }
         this.renderer.render(this.scene, this.getCurrentCamera());
@@ -243,23 +243,23 @@ export class WorldBuilder {
         const groundGeometry = new THREE.PlaneGeometry(50, 50);
         const textureLoader = new THREE.TextureLoader();
         let colorMap = textureLoader.load(
-            'assets/textures/ground/Moss001_1K_Color.png',
+            '../assets/textures/ground/Moss001_1K_Color.png',
             (texture) => {
                 texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
                 texture.repeat.set(10, 10);
             });
         let normalMap = textureLoader.load(
-            'assets/textures/ground/Moss001_1K_NormalGL.png',
+            '../assets/textures/ground/Moss001_1K_NormalGL.png',
             (texture) => {
                 texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
                 texture.repeat.set(10, 10);
             });
         const groundMaterial = new THREE.MeshStandardMaterial({
             map: colorMap,
-            aoMap: textureLoader.load('assets/textures/ground/Moss001_1K_AmbientOcclusion.png'),
+            aoMap: textureLoader.load('../assets/textures/ground/Moss001_1K_AmbientOcclusion.png'),
             normalMap: normalMap,
-            roughnessMap: textureLoader.load('assets/textures/ground/Moss001_1K_Roughness.png'),
-            displacementMap: textureLoader.load('assets/textures/ground/Moss001_1K_Displacement.png'),
+            roughnessMap: textureLoader.load('../assets/textures/ground/Moss001_1K_Roughness.png'),
+            displacementMap: textureLoader.load('../assets/textures/ground/Moss001_1K_Displacement.png'),
         });
         const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
         groundMesh.receiveShadow = true;
@@ -335,7 +335,7 @@ export class WorldBuilder {
             [8, 0, -14]
         ];
         const gltfLoader = new GLTFLoader();
-        gltfLoader.load('assets/objects/pine_tree/scene.gltf', (gltf) => {
+        gltfLoader.load('../assets/objects/pine_tree/scene.gltf', (gltf) => {
             gltf.scene.scale.set(0.04, 0.04, 0.04);
             gltf.scene.traverse(child => {
                 if (child instanceof THREE.Mesh) {
@@ -379,12 +379,12 @@ export class WorldBuilder {
         // Background - Night Sky
         const backgroundLoader = new THREE.CubeTextureLoader();
         this.scene.background = backgroundLoader.load([
-            'assets/textures/background/pos-x.png',
-            'assets/textures/background/neg-x.png',
-            'assets/textures/background/pos-y.png',
-            'assets/textures/background/neg-y.png',
-            'assets/textures/background/pos-z.png',
-            'assets/textures/background/neg-z.png'
+            '../assets/textures/background/pos-x.png',
+            '../assets/textures/background/neg-x.png',
+            '../assets/textures/background/pos-y.png',
+            '../assets/textures/background/neg-y.png',
+            '../assets/textures/background/pos-z.png',
+            '../assets/textures/background/neg-z.png'
         ]);
     }
 
